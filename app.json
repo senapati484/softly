@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Softly",
+    "slug": "softly-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.softly.app"
+    },
+    "android": {
+      "package": "com.softly.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "scheme": "softly"
+  }
+}
