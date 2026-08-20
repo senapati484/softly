@@ -6,13 +6,15 @@ import { useSoftlyStore } from '../../store/useSoftlyStore';
 import { Colors } from '../../theme/colors';
 
 export function DuskShiftCard() {
-  const { amberShiftLevel, setAmberShiftLevel, sleepGuardEnabled, toggleSleepGuard } = useSoftlyStore();
+  const { amberShiftLevel, setAmberShiftLevel, sleepGuardEnabled, toggleSleepGuard, hapticsEnabled } = useSoftlyStore();
 
   const triggerHaptic = () => {
-    try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    } catch {
-      // ignore
+    if (hapticsEnabled) {
+      try {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      } catch {
+        // ignore
+      }
     }
   };
 
@@ -23,7 +25,7 @@ export function DuskShiftCard() {
         <View style={styles.cardHeader}>
           <View style={styles.iconRow}>
             <View style={styles.sunIcon}>
-              <Sun size={16} color={Colors.lavender.deep} />
+              <Sun size={16} color={Colors.lavender.deep} strokeWidth={2.2} />
             </View>
             <Text style={styles.cardTitle}>Blue-Light Wind Down</Text>
           </View>
@@ -33,7 +35,7 @@ export function DuskShiftCard() {
         </View>
 
         <Text style={styles.desc}>
-          Screen temperature shifts to warm candle amber at 8:30 PM to preserve melatonin production.
+          Screen temperature shifts to warm candle amber at 8:30 PM to preserve natural melatonin production.
         </Text>
 
         {/* Level bar */}
@@ -50,7 +52,7 @@ export function DuskShiftCard() {
           {[50, 70, 85, 100].map((val) => (
             <TouchableOpacity
               key={val}
-              activeOpacity={0.7}
+              activeOpacity={0.75}
               onPress={() => {
                 triggerHaptic();
                 setAmberShiftLevel(val);
@@ -75,12 +77,12 @@ export function DuskShiftCard() {
         style={styles.guardCard}
       >
         <View style={[styles.guardIcon, sleepGuardEnabled && styles.guardIconActive]}>
-          <Moon size={17} color={sleepGuardEnabled ? '#6B21A8' : Colors.stone.body} />
+          <Moon size={17} color={sleepGuardEnabled ? Colors.lavender.deep : Colors.stone.muted} strokeWidth={2.2} />
         </View>
         <View style={styles.guardInfo}>
           <Text style={styles.guardTitle}>Evening Sleep Guard</Text>
           <Text style={styles.guardSub}>
-            {sleepGuardEnabled ? 'Engages automatically at 10:00 PM' : 'Disabled'}
+            {sleepGuardEnabled ? 'Engages automatically at 10:00 PM' : 'Tap to enable evening protection'}
           </Text>
         </View>
         <View style={[styles.guardBadge, sleepGuardEnabled && styles.guardBadgeActive]}>
@@ -96,15 +98,15 @@ export function DuskShiftCard() {
 const styles = StyleSheet.create({
   container: { gap: 12 },
   card: {
-    backgroundColor: 'rgba(255,255,255,0.85)',
+    backgroundColor: '#FFFFFF',
     padding: 20,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: 'rgba(214,211,208,0.6)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
+    borderColor: '#E2DFDA',
+    shadowColor: '#1C1917',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
     elevation: 2,
     gap: 12,
   },
@@ -114,20 +116,23 @@ const styles = StyleSheet.create({
     width: 32, height: 32, borderRadius: 10,
     backgroundColor: Colors.lavender.background,
     alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#E2DFDA',
   },
-  cardTitle: { fontSize: 14, fontWeight: '600', color: Colors.stone.ink },
+  cardTitle: { fontSize: 14.5, fontWeight: '700', color: Colors.stone.ink },
   timePill: {
-    paddingHorizontal: 10, paddingVertical: 3,
+    paddingHorizontal: 10, paddingVertical: 3.5,
     borderRadius: 99, backgroundColor: Colors.lavender.background,
+    borderWidth: 1, borderColor: '#E2DFDA',
   },
-  timePillText: { fontSize: 11, fontWeight: '600', color: Colors.lavender.deep },
-  desc: { fontSize: 12, color: Colors.stone.body, lineHeight: 18 },
+  timePillText: { fontSize: 11, fontWeight: '700', color: Colors.lavender.deep },
+  desc: { fontSize: 13, color: Colors.stone.body, lineHeight: 19 },
   barRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  barLabel: { fontSize: 11, color: Colors.stone.muted },
-  barValue: { fontSize: 11, fontWeight: '500', color: Colors.stone.body },
+  barLabel: { fontSize: 11.5, fontWeight: '600', color: Colors.stone.body },
+  barValue: { fontSize: 12, fontWeight: '700', color: Colors.lavender.deep },
   barTrack: {
     height: 8, borderRadius: 4,
-    backgroundColor: '#F3F2F0', overflow: 'hidden',
+    backgroundColor: '#F0EEEA', overflow: 'hidden',
   },
   barFill: {
     height: '100%', borderRadius: 4,
@@ -135,38 +140,43 @@ const styles = StyleSheet.create({
   },
   presets: { flexDirection: 'row', gap: 8 },
   preset: {
-    flex: 1, paddingVertical: 6, borderRadius: 12,
+    flex: 1, paddingVertical: 8, borderRadius: 12,
     alignItems: 'center', justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.5)',
-    borderWidth: 1, borderColor: 'rgba(214,211,208,0.5)',
+    backgroundColor: '#F8F7F4',
+    borderWidth: 1, borderColor: '#E2DFDA',
   },
   presetActive: {
     backgroundColor: Colors.lavender.background,
-    borderColor: Colors.lavender.accent,
+    borderColor: Colors.lavender.deep,
   },
-  presetText: { fontSize: 11, fontWeight: '500', color: Colors.stone.muted },
-  presetTextActive: { color: Colors.lavender.deep },
+  presetText: { fontSize: 11.5, fontWeight: '600', color: Colors.stone.muted },
+  presetTextActive: { color: Colors.lavender.deep, fontWeight: '700' },
   guardCard: {
     flexDirection: 'row', alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.85)',
-    padding: 16, borderRadius: 18,
-    borderWidth: 1, borderColor: 'rgba(214,211,208,0.6)',
+    backgroundColor: '#FFFFFF',
+    padding: 16, borderRadius: 20,
+    borderWidth: 1, borderColor: '#E2DFDA',
+    shadowColor: '#1C1917',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 4,
+    elevation: 1,
     gap: 12,
   },
   guardIcon: {
-    width: 36, height: 36, borderRadius: 10,
-    backgroundColor: '#F3F2F0',
+    width: 38, height: 38, borderRadius: 12,
+    backgroundColor: '#F4F2EE',
     alignItems: 'center', justifyContent: 'center',
   },
-  guardIconActive: { backgroundColor: '#F3E8FF' },
+  guardIconActive: { backgroundColor: Colors.lavender.background },
   guardInfo: { flex: 1 },
-  guardTitle: { fontSize: 13, fontWeight: '600', color: Colors.stone.ink },
-  guardSub: { fontSize: 11, color: Colors.stone.muted, marginTop: 1 },
+  guardTitle: { fontSize: 13.5, fontWeight: '700', color: Colors.stone.ink },
+  guardSub: { fontSize: 11.5, color: Colors.stone.muted, marginTop: 1 },
   guardBadge: {
-    paddingHorizontal: 10, paddingVertical: 4,
-    borderRadius: 99, backgroundColor: '#F3F2F0',
+    paddingHorizontal: 11, paddingVertical: 4.5,
+    borderRadius: 99, backgroundColor: '#F0EEEA',
   },
-  guardBadgeActive: { backgroundColor: Colors.sage.background },
+  guardBadgeActive: { backgroundColor: Colors.sage.background, borderWidth: 1, borderColor: '#DCE8DC' },
   guardBadgeText: { fontSize: 11, fontWeight: '600', color: Colors.stone.muted },
-  guardBadgeTextActive: { color: '#065F46' },
+  guardBadgeTextActive: { color: Colors.sage.deep, fontWeight: '700' },
 });

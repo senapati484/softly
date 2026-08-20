@@ -29,6 +29,7 @@ import {
   Bell,
   Sun,
   Coffee,
+  Flame,
 } from 'lucide-react-native';
 import { Colors } from '../../theme/colors';
 import { GrainTexture } from '../../components/ui/GrainTexture';
@@ -205,31 +206,31 @@ export default function ProfileModal() {
               <Text style={styles.intentionPillText}>{intention}</Text>
             </View>
             <View style={styles.privateRow}>
-              <ShieldCheck size={12} color={Colors.stone.muted} />
+              <ShieldCheck size={12} color={Colors.sage.deep} />
               <Text style={styles.privateText}>100% Local Device Storage</Text>
             </View>
           </View>
         </View>
 
-        {/* Stats Grid */}
+        {/* Stats Grid with Lucide Vector Icons */}
         <View style={styles.statsGrid}>
           <View style={styles.statCard}>
-            <Text style={styles.statEmoji}>🌿</Text>
+            <Flame size={18} color={Colors.coral.active} style={styles.statIcon} />
             <Text style={styles.statValue}>{streak.current}d</Text>
             <Text style={styles.statLabel}>Active Streak</Text>
           </View>
           <View style={styles.statCard}>
-            <Text style={styles.statEmoji}>⏱️</Text>
+            <Clock size={18} color={Colors.sage.deep} style={styles.statIcon} />
             <Text style={styles.statValue}>{peaceStats.totalBreathingMinutes}m</Text>
             <Text style={styles.statLabel}>Breathwork</Text>
           </View>
           <View style={styles.statCard}>
-            <Text style={styles.statEmoji}>📖</Text>
+            <BookOpen size={18} color={Colors.lavender.deep} style={styles.statIcon} />
             <Text style={styles.statValue}>{reflections.length}</Text>
             <Text style={styles.statLabel}>Notes Written</Text>
           </View>
           <View style={styles.statCard}>
-            <Text style={styles.statEmoji}>🛡️</Text>
+            <ShieldCheck size={18} color={Colors.stone.ink} style={styles.statIcon} />
             <Text style={styles.statValue}>{peaceStats.estimatedSavedHours}h</Text>
             <Text style={styles.statLabel}>Peace Saved</Text>
           </View>
@@ -278,7 +279,7 @@ export default function ProfileModal() {
                   >
                     {item}
                   </Text>
-                  {isSelected && <Check size={16} color={Colors.stone.ink} />}
+                  {isSelected && <Check size={16} color={Colors.stone.ink} strokeWidth={2.4} />}
                 </TouchableOpacity>
               );
             })}
@@ -351,16 +352,14 @@ export default function ProfileModal() {
                   >
                     {snd}
                   </Text>
-                  {isSelected && <Check size={16} color={Colors.stone.ink} />}
+                  {isSelected && <Check size={16} color={Colors.stone.ink} strokeWidth={2.4} />}
                 </TouchableOpacity>
               );
             })}
           </View>
         </View>
 
-        {/* ============================================================ */}
-        {/* QUIET NOTIFICATIONS & TIMING SETTINGS                        */}
-        {/* ============================================================ */}
+        {/* Quiet Notifications & Schedule */}
         <View style={styles.section}>
           <View style={styles.sectionHeaderRow}>
             <Bell size={14} color={Colors.coral.deep} />
@@ -372,7 +371,7 @@ export default function ProfileModal() {
             <View style={styles.notifRow}>
               <View style={styles.notifInfo}>
                 <View style={styles.notifLabelRow}>
-                  <Sun size={13} color={Colors.stone.body} />
+                  <Sun size={14} color={Colors.stone.ink} />
                   <Text style={styles.notifTitle}>Morning Pebble Reminder</Text>
                 </View>
                 <Text style={styles.notifDesc}>
@@ -427,7 +426,7 @@ export default function ProfileModal() {
             <View style={styles.notifRow}>
               <View style={styles.notifInfo}>
                 <View style={styles.notifLabelRow}>
-                  <Coffee size={13} color={Colors.stone.body} />
+                  <Coffee size={14} color={Colors.stone.ink} />
                   <Text style={styles.notifTitle}>Unplug Screen Breaks</Text>
                 </View>
                 <Text style={styles.notifDesc}>
@@ -481,7 +480,7 @@ export default function ProfileModal() {
             <View style={styles.notifRow}>
               <View style={styles.notifInfo}>
                 <View style={styles.notifLabelRow}>
-                  <Moon size={13} color={Colors.stone.body} />
+                  <Moon size={14} color={Colors.stone.ink} />
                   <Text style={styles.notifTitle}>Night Sanctuary Wind-Down</Text>
                 </View>
                 <Text style={styles.notifDesc}>
@@ -532,7 +531,7 @@ export default function ProfileModal() {
 
             {/* Quiet Pledge */}
             <View style={styles.pledgeRow}>
-              <ShieldCheck size={12} color={Colors.sage.deep} />
+              <ShieldCheck size={13} color={Colors.sage.deep} />
               <Text style={styles.pledgeText}>
                 No urgency sounds or red badges. Ever.
               </Text>
@@ -602,7 +601,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(231, 229, 228, 0.6)',
+    borderBottomColor: '#EAE8E4',
   },
   headerTag: {
     fontSize: 11,
@@ -621,9 +620,9 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.6)',
+    borderColor: '#E2DFDA',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -636,12 +635,17 @@ const styles = StyleSheet.create({
   avatarCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: '#FFFFFF',
     borderRadius: 22,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.6)',
+    borderColor: '#E2DFDA',
     gap: 14,
+    shadowColor: '#1C1917',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 2,
   },
   avatarCircle: {
     width: 52,
@@ -650,12 +654,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.coral.background,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 183, 178, 0.6)',
+    borderWidth: 1.5,
+    borderColor: Colors.coral.accent,
   },
   avatarLetter: {
     fontSize: 22,
-    fontWeight: '600',
+    fontWeight: '700',
     color: Colors.coral.deep,
   },
   avatarInfo: {
@@ -664,7 +668,7 @@ const styles = StyleSheet.create({
   },
   avatarName: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
     color: Colors.stone.ink,
   },
   intentionPill: {
@@ -675,7 +679,7 @@ const styles = StyleSheet.create({
   intentionPillText: {
     fontSize: 11.5,
     color: Colors.stone.body,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   privateRow: {
     flexDirection: 'row',
@@ -686,6 +690,7 @@ const styles = StyleSheet.create({
   privateText: {
     fontSize: 10.5,
     color: Colors.stone.muted,
+    fontWeight: '500',
   },
   statsGrid: {
     flexDirection: 'row',
@@ -693,15 +698,19 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 12,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.6)',
+    borderColor: '#E2DFDA',
+    shadowColor: '#1C1917',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 4,
+    elevation: 1,
   },
-  statEmoji: {
-    fontSize: 16,
+  statIcon: {
     marginBottom: 4,
   },
   statValue: {
@@ -713,6 +722,7 @@ const styles = StyleSheet.create({
     fontSize: 9.5,
     color: Colors.stone.muted,
     marginTop: 2,
+    fontWeight: '500',
   },
   section: {
     gap: 8,
@@ -736,12 +746,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.7)',
+    borderColor: '#E2DFDA',
   },
   textInput: {
     flex: 1,
     fontSize: 14,
     color: Colors.stone.ink,
+    fontWeight: '500',
   },
   intentionsList: {
     gap: 8,
@@ -750,16 +761,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: '#FFFFFF',
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.6)',
+    borderColor: '#E2DFDA',
   },
   intentionRowSelected: {
     backgroundColor: '#FFFFFF',
     borderColor: Colors.stone.ink,
+    borderWidth: 1.5,
   },
   intentionRowText: {
     fontSize: 13,
@@ -768,7 +780,7 @@ const styles = StyleSheet.create({
   },
   intentionRowTextSelected: {
     color: Colors.stone.ink,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   goalRow: {
     flexDirection: 'row',
@@ -778,9 +790,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.6)',
+    borderColor: '#E2DFDA',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -791,10 +803,11 @@ const styles = StyleSheet.create({
   goalPillText: {
     fontSize: 12.5,
     fontWeight: '600',
-    color: Colors.stone.ink,
+    color: Colors.stone.body,
   },
   goalPillTextSelected: {
     color: '#FFFFFF',
+    fontWeight: '700',
   },
   soundList: {
     gap: 8,
@@ -803,16 +816,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: '#FFFFFF',
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.6)',
+    borderColor: '#E2DFDA',
   },
   soundRowSelected: {
     backgroundColor: '#FFFFFF',
     borderColor: Colors.stone.ink,
+    borderWidth: 1.5,
   },
   soundRowText: {
     fontSize: 13,
@@ -821,16 +835,16 @@ const styles = StyleSheet.create({
   },
   soundRowTextSelected: {
     color: Colors.stone.ink,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 
   // Notification Card
   notifCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: '#FFFFFF',
     borderRadius: 18,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.6)',
+    borderColor: '#E2DFDA',
     gap: 12,
   },
   notifRow: {
@@ -850,7 +864,7 @@ const styles = StyleSheet.create({
   },
   notifTitle: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '700',
     color: Colors.stone.ink,
   },
   notifDesc: {
@@ -866,7 +880,7 @@ const styles = StyleSheet.create({
   timeSelectorLabel: {
     fontSize: 11.5,
     color: Colors.stone.body,
-    fontWeight: '500',
+    fontWeight: '600',
     marginRight: 8,
   },
   timeChips: {
@@ -874,12 +888,12 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   timeChip: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingHorizontal: 11,
+    paddingVertical: 6,
     borderRadius: 99,
-    backgroundColor: 'rgba(214, 211, 208, 0.35)',
+    backgroundColor: '#F4F2EE',
     borderWidth: 1,
-    borderColor: 'transparent',
+    borderColor: '#E2DFDA',
   },
   timeChipActive: {
     backgroundColor: Colors.stone.ink,
@@ -892,35 +906,36 @@ const styles = StyleSheet.create({
   },
   timeChipTextActive: {
     color: '#FFFFFF',
+    fontWeight: '700',
   },
   divider: {
     height: 1,
-    backgroundColor: 'rgba(231, 229, 228, 0.7)',
+    backgroundColor: '#F0EEEA',
   },
   pledgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
     backgroundColor: Colors.sage.background,
-    padding: 8,
+    padding: 10,
     borderRadius: 12,
     marginTop: 4,
   },
   pledgeText: {
-    fontSize: 10.5,
-    color: Colors.stone.body,
-    fontWeight: '500',
+    fontSize: 11,
+    color: Colors.sage.deep,
+    fontWeight: '600',
   },
 
   toggleCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.6)',
+    borderColor: '#E2DFDA',
   },
   toggleInfo: {
     flex: 1,
@@ -928,7 +943,7 @@ const styles = StyleSheet.create({
   },
   toggleTitle: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '700',
     color: Colors.stone.ink,
     marginBottom: 2,
   },
@@ -947,9 +962,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 99,
-    backgroundColor: 'rgba(255, 228, 225, 0.5)',
+    backgroundColor: Colors.coral.background,
     borderWidth: 1,
-    borderColor: 'rgba(255, 183, 178, 0.4)',
+    borderColor: Colors.coral.accent,
   },
   resetBtnText: {
     fontSize: 11.5,
@@ -962,7 +977,7 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === 'ios' ? 32 : 18,
     backgroundColor: Colors.cream.canvas,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(231, 229, 228, 0.7)',
+    borderTopColor: '#EAE8E4',
   },
   saveBtn: {
     backgroundColor: Colors.stone.ink,
@@ -970,15 +985,15 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: '#1C1917',
     shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.12,
     shadowRadius: 8,
-    elevation: 3,
+    elevation: 4,
   },
   saveBtnText: {
     fontSize: 14.5,
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#FFFFFF',
   },
 });

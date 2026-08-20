@@ -1,0 +1,21 @@
+{
+  "" : {
+    "const-values" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/EXAV-primary.swiftconstvalues",
+    "dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/EXAV-primary.d",
+    "diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/EXAV-primary.dia",
+    "emit-module-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/EXAV-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/EXAV-primary-emit-module.dia",
+    "pch" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/EXAV-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/EXAV-primary.swiftdeps"
+  },
+  "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/node_modules/expo-av/ios/EXAV/ExpoVideoView.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/ExpoVideoView.o",
+    "llvm-bc" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/ExpoVideoView.bc",
+    "object" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/ExpoVideoView.o"
+  },
+  "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/node_modules/expo-av/ios/EXAV/Video/VideoViewModule.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/VideoViewModule.o",
+    "llvm-bc" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/VideoViewModule.bc",
+    "object" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXAV.build/Objects-normal/arm64/VideoViewModule.o"
+  }
+}

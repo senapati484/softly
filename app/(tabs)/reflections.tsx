@@ -3,21 +3,21 @@ import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet } from 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { Heart, Plus, Volume2, Trash2, Sparkles, Search, X, Filter } from 'lucide-react-native';
+import { Heart, Plus, Volume2, Trash2, Sparkles, Search, X, Leaf } from 'lucide-react-native';
 import { GrainTexture } from '../../components/ui/GrainTexture';
 import { SoundCard } from '../../components/sounds/SoundCard';
-import { useSoftlyStore, MoodTag } from '../../store/useSoftlyStore';
+import { useSoftlyStore } from '../../store/useSoftlyStore';
 import { useSoundscapes } from '../../hooks/useSoundscapes';
 import { Colors } from '../../theme/colors';
 
 const FILTER_TAGS: { id: string; label: string }[] = [
   { id: 'all', label: 'All Notes' },
-  { id: 'favorites', label: 'Favorites ❤️' },
-  { id: 'Grounded', label: 'Grounded 🌿' },
-  { id: 'Peaceful', label: 'Peaceful 🕊️' },
-  { id: 'Restful', label: 'Restful 🌙' },
-  { id: 'Reflective', label: 'Reflective 📖' },
-  { id: 'Gentle', label: 'Gentle 🌸' },
+  { id: 'favorites', label: 'Favorites' },
+  { id: 'Grounded', label: 'Grounded' },
+  { id: 'Peaceful', label: 'Peaceful' },
+  { id: 'Restful', label: 'Restful' },
+  { id: 'Reflective', label: 'Reflective' },
+  { id: 'Gentle', label: 'Gentle' },
 ];
 
 export default function ReflectionsScreen() {
@@ -83,7 +83,7 @@ export default function ReflectionsScreen() {
             <Text style={styles.title}>Morning Pebble</Text>
           </View>
           <View style={styles.streak}>
-            <Text>🌿</Text>
+            <Leaf size={13} color={Colors.sage.deep} strokeWidth={2.4} />
             <Text style={styles.streakText}>{streak.current} days calm</Text>
           </View>
         </View>
@@ -107,11 +107,11 @@ export default function ReflectionsScreen() {
           <View style={styles.pebbleBottom}>
             <Text style={styles.pebbleCredit}>Curated for stillness</Text>
             <TouchableOpacity
-              activeOpacity={0.7}
+              activeOpacity={0.75}
               onPress={() => router.push('/modal/new-entry')}
               style={styles.writeBtn}
             >
-              <Plus size={12} color={Colors.stone.ink} />
+              <Plus size={13} color={Colors.stone.ink} strokeWidth={2.4} />
               <Text style={styles.writeBtnText}> Write Note</Text>
             </TouchableOpacity>
           </View>
@@ -121,7 +121,7 @@ export default function ReflectionsScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <View style={styles.sectionHeaderLeft}>
-              <Volume2 size={16} color={Colors.stone.body} />
+              <Volume2 size={16} color={Colors.stone.ink} />
               <Text style={styles.sectionTitle}> Ambient Noise</Text>
             </View>
             <Text style={styles.sectionSub}>Offline & Looping</Text>
@@ -149,18 +149,18 @@ export default function ReflectionsScreen() {
             </View>
 
             <TouchableOpacity
-              activeOpacity={0.7}
+              activeOpacity={0.75}
               onPress={() => router.push('/modal/new-entry')}
               style={styles.newEntryBtn}
             >
-              <Plus size={14} color={Colors.coral.active} />
+              <Plus size={14} color={Colors.coral.deep} strokeWidth={2.4} />
               <Text style={styles.newEntryBtnText}> New Entry</Text>
             </TouchableOpacity>
           </View>
 
           {/* Search Input Bar */}
           <View style={styles.searchBar}>
-            <Search size={14} color={Colors.stone.muted} />
+            <Search size={15} color={Colors.stone.muted} />
             <TextInput
               value={searchQuery}
               onChangeText={setSearchQuery}
@@ -187,13 +187,21 @@ export default function ReflectionsScreen() {
               return (
                 <TouchableOpacity
                   key={tag.id}
-                  activeOpacity={0.7}
+                  activeOpacity={0.75}
                   onPress={() => {
                     triggerHaptic();
                     setActiveFilter(tag.id);
                   }}
                   style={[styles.filterChip, isSelected && styles.filterChipActive]}
                 >
+                  {tag.id === 'favorites' && (
+                    <Heart
+                      size={11}
+                      color={isSelected ? '#FFFFFF' : Colors.coral.deep}
+                      fill={isSelected ? '#FFFFFF' : Colors.coral.deep}
+                      style={{ marginRight: 4 }}
+                    />
+                  )}
                   <Text
                     style={[
                       styles.filterChipText,
@@ -243,19 +251,21 @@ export default function ReflectionsScreen() {
                     <TouchableOpacity
                       onPress={() => handleToggleFav(entry.id)}
                       activeOpacity={0.7}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     >
                       <Heart
-                        size={15}
-                        color={entry.isFavorite ? Colors.coral.accent : Colors.stone.muted}
-                        fill={entry.isFavorite ? Colors.coral.accent : 'none'}
+                        size={16}
+                        color={entry.isFavorite ? Colors.coral.active : Colors.stone.muted}
+                        fill={entry.isFavorite ? Colors.coral.active : 'none'}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity
                       onPress={() => deleteReflection(entry.id)}
                       activeOpacity={0.7}
-                      style={{ marginLeft: 12 }}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                      style={{ marginLeft: 14 }}
                     >
-                      <Trash2 size={14} color={Colors.stone.light} />
+                      <Trash2 size={15} color={Colors.stone.muted} />
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -274,96 +284,104 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 12, paddingBottom: 16 },
   headerTag: { fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase', color: Colors.stone.muted },
   title: { fontSize: 26, fontWeight: '300', color: Colors.stone.ink, marginTop: 2 },
-  streak: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 99, backgroundColor: Colors.sage.background, borderWidth: 1, borderColor: 'rgba(214,211,208,0.6)' },
-  streakText: { fontSize: 12, fontWeight: '600', color: Colors.stone.ink },
-  pebbleCard: { backgroundColor: Colors.sage.background, padding: 20, borderRadius: 24, borderWidth: 1, borderColor: 'rgba(214,211,208,0.6)', marginBottom: 24, gap: 12 },
+  streak: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 99, backgroundColor: Colors.sage.background, borderWidth: 1, borderColor: '#DCE8DC' },
+  streakText: { fontSize: 12, fontWeight: '700', color: Colors.sage.deep },
+  pebbleCard: { backgroundColor: Colors.sage.background, padding: 20, borderRadius: 24, borderWidth: 1, borderColor: '#DCE8DC', marginBottom: 24, gap: 12 },
   pebbleCardTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  pebblePill: { paddingHorizontal: 10, paddingVertical: 3, borderRadius: 99, backgroundColor: 'rgba(255,255,255,0.8)', borderWidth: 1, borderColor: 'rgba(214,211,208,0.5)' },
-  pebblePillText: { fontSize: 10, fontWeight: '600', color: Colors.stone.body },
+  pebblePill: { paddingHorizontal: 10, paddingVertical: 3, borderRadius: 99, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DCE8DC' },
+  pebblePillText: { fontSize: 10.5, fontWeight: '700', color: Colors.stone.body },
   pebbleHint: { flexDirection: 'row', alignItems: 'center' },
-  pebbleHintText: { fontSize: 11, color: Colors.stone.muted, fontWeight: '500' },
-  pebbleQuote: { fontSize: 13, color: Colors.stone.ink, fontStyle: 'italic', lineHeight: 20 },
-  pebbleBottom: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 8, borderTopWidth: 1, borderTopColor: 'rgba(214,211,208,0.6)' },
-  pebbleCredit: { fontSize: 11, color: Colors.stone.muted },
-  writeBtn: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 99, backgroundColor: 'rgba(255,255,255,0.9)', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 3, elevation: 1 },
-  writeBtnText: { fontSize: 12, fontWeight: '600', color: Colors.stone.ink },
+  pebbleHintText: { fontSize: 11, color: Colors.stone.body, fontWeight: '600' },
+  pebbleQuote: { fontSize: 14, color: Colors.stone.ink, fontStyle: 'italic', lineHeight: 21 },
+  pebbleBottom: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 8, borderTopWidth: 1, borderTopColor: '#DCE8DC' },
+  pebbleCredit: { fontSize: 11, color: Colors.stone.muted, fontWeight: '500' },
+  writeBtn: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 99, backgroundColor: '#FFFFFF', shadowColor: '#1C1917', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 3, elevation: 2, borderWidth: 1, borderColor: '#DCE8DC' },
+  writeBtnText: { fontSize: 12, fontWeight: '700', color: Colors.stone.ink },
   section: { marginBottom: 24 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
-  sectionHeaderLeft: { flexDirection: 'row', alignItems: 'center' },
+  sectionHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   journalHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   countBadge: {
-    backgroundColor: 'rgba(214, 211, 208, 0.4)',
-    paddingHorizontal: 7,
-    paddingVertical: 1,
+    backgroundColor: '#EAE8E4',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
     borderRadius: 99,
   },
   countBadgeText: {
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: '700',
     color: Colors.stone.body,
   },
-  sectionTitle: { fontSize: 14, fontWeight: '600', color: Colors.stone.ink },
-  sectionSub: { fontSize: 11, color: Colors.stone.muted },
-  newEntryBtn: { flexDirection: 'row', alignItems: 'center' },
-  newEntryBtnText: { fontSize: 12, fontWeight: '600', color: Colors.coral.active },
+  sectionTitle: { fontSize: 14, fontWeight: '700', color: Colors.stone.ink },
+  sectionSub: { fontSize: 11, color: Colors.stone.muted, fontWeight: '500' },
+  newEntryBtn: { flexDirection: 'row', alignItems: 'center', gap: 2 },
+  newEntryBtnText: { fontSize: 12, fontWeight: '700', color: Colors.coral.deep },
 
   // Search & Filter
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     paddingHorizontal: 14,
-    paddingVertical: 9,
+    paddingVertical: 10,
     borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.6)',
+    borderColor: '#E2DFDA',
     marginBottom: 10,
     gap: 8,
+    shadowColor: '#1C1917',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 3,
+    elevation: 1,
   },
   searchInput: {
     flex: 1,
-    fontSize: 12.5,
+    fontSize: 13,
     color: Colors.stone.ink,
     padding: 0,
+    fontWeight: '500',
   },
   filterScroll: {
     gap: 6,
     paddingBottom: 12,
   },
   filterChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 99,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.6)',
+    borderColor: '#E2DFDA',
   },
   filterChipActive: {
     backgroundColor: Colors.stone.ink,
     borderColor: Colors.stone.ink,
   },
   filterChipText: {
-    fontSize: 11,
+    fontSize: 11.5,
     fontWeight: '500',
     color: Colors.stone.body,
   },
   filterChipTextActive: {
     color: '#FFFFFF',
-    fontWeight: '600',
+    fontWeight: '700',
   },
 
-  emptyCard: { backgroundColor: 'rgba(255,255,255,0.7)', padding: 24, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(214,211,208,0.6)', alignItems: 'center', gap: 4 },
-  emptyTitle: { fontSize: 13, fontWeight: '600', color: Colors.stone.ink },
-  emptyText: { fontSize: 11.5, color: Colors.stone.muted, textAlign: 'center', lineHeight: 16 },
-  entryCard: { backgroundColor: 'rgba(255,255,255,0.9)', padding: 16, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(214,211,208,0.6)', marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3, elevation: 1 },
+  emptyCard: { backgroundColor: '#FFFFFF', padding: 24, borderRadius: 18, borderWidth: 1, borderColor: '#E2DFDA', alignItems: 'center', gap: 4 },
+  emptyTitle: { fontSize: 13.5, fontWeight: '700', color: Colors.stone.ink },
+  emptyText: { fontSize: 12, color: Colors.stone.muted, textAlign: 'center', lineHeight: 18 },
+  entryCard: { backgroundColor: '#FFFFFF', padding: 16, borderRadius: 18, borderWidth: 1, borderColor: '#E2DFDA', marginBottom: 12, shadowColor: '#1C1917', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 4, elevation: 1 },
   entryQuoteRow: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 8 },
-  entryQuoteLine: { width: 2, borderRadius: 1, backgroundColor: Colors.coral.accent, marginRight: 8, alignSelf: 'stretch' },
-  entryQuote: { flex: 1, fontSize: 11, color: Colors.stone.muted, fontStyle: 'italic', lineHeight: 16 },
-  entryNotes: { fontSize: 12, color: Colors.stone.ink, lineHeight: 18 },
-  entryFooter: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 10, marginTop: 8, borderTopWidth: 1, borderTopColor: '#F5F4F2' },
+  entryQuoteLine: { width: 2.5, borderRadius: 2, backgroundColor: Colors.coral.accent, marginRight: 8, alignSelf: 'stretch' },
+  entryQuote: { flex: 1, fontSize: 11.5, color: Colors.stone.muted, fontStyle: 'italic', lineHeight: 16 },
+  entryNotes: { fontSize: 13, color: Colors.stone.ink, lineHeight: 19, fontWeight: '400' },
+  entryFooter: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 10, marginTop: 8, borderTopWidth: 1, borderTopColor: '#F4F2EE' },
   entryMeta: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  moodPill: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 99, backgroundColor: Colors.sage.background },
-  moodPillText: { fontSize: 10, color: Colors.stone.body, fontWeight: '500' },
-  entryDate: { fontSize: 10, color: Colors.stone.muted },
+  moodPill: { paddingHorizontal: 9, paddingVertical: 2.5, borderRadius: 99, backgroundColor: Colors.sage.background, borderWidth: 1, borderColor: '#DCE8DC' },
+  moodPillText: { fontSize: 10.5, color: Colors.sage.deep, fontWeight: '700' },
+  entryDate: { fontSize: 10.5, color: Colors.stone.muted, fontWeight: '500' },
   entryActions: { flexDirection: 'row', alignItems: 'center' },
 });

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -11,6 +11,9 @@ import Animated, {
 import { Wind, Sparkles } from 'lucide-react-native';
 import { BreathPhase } from '../../hooks/useBreatheEngine';
 import { Colors } from '../../theme/colors';
+
+const { width } = Dimensions.get('window');
+const CIRCLE_CONTAINER_SIZE = Math.min(280, width * 0.72);
 
 interface BreathingCircleProps {
   phase: BreathPhase;
@@ -31,47 +34,47 @@ export function BreathingCircle({
 }: BreathingCircleProps) {
   const outerScale = useSharedValue(1);
   const middleScale = useSharedValue(1);
-  const haloOpacity = useSharedValue(0.35);
+  const haloOpacity = useSharedValue(0.45);
 
   useEffect(() => {
     if (!isActive) {
       outerScale.value = withRepeat(
         withSequence(
-          withTiming(1.08, { duration: 3000, easing: Easing.inOut(Easing.ease) }),
-          withTiming(1.0, { duration: 3000, easing: Easing.inOut(Easing.ease) })
+          withTiming(1.06, { duration: 3200, easing: Easing.inOut(Easing.ease) }),
+          withTiming(1.0, { duration: 3200, easing: Easing.inOut(Easing.ease) })
         ),
         -1,
         true
       );
       middleScale.value = 1;
-      haloOpacity.value = 0.35;
+      haloOpacity.value = 0.45;
       return;
     }
 
     const durationMs = Math.max(500, phaseDuration * 1000);
 
     if (phase === 'inhale') {
-      outerScale.value = withTiming(1.4, { duration: durationMs, easing: Easing.out(Easing.quad) });
-      middleScale.value = withTiming(1.2, { duration: durationMs, easing: Easing.out(Easing.quad) });
-      haloOpacity.value = withTiming(0.65, { duration: durationMs });
+      outerScale.value = withTiming(1.35, { duration: durationMs, easing: Easing.out(Easing.quad) });
+      middleScale.value = withTiming(1.18, { duration: durationMs, easing: Easing.out(Easing.quad) });
+      haloOpacity.value = withTiming(0.75, { duration: durationMs });
     } else if (phase === 'hold') {
       outerScale.value = withRepeat(
         withSequence(
-          withTiming(1.42, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
-          withTiming(1.38, { duration: 1500, easing: Easing.inOut(Easing.ease) })
+          withTiming(1.37, { duration: 1600, easing: Easing.inOut(Easing.ease) }),
+          withTiming(1.33, { duration: 1600, easing: Easing.inOut(Easing.ease) })
         ),
         -1,
         true
       );
-      haloOpacity.value = 0.55;
+      haloOpacity.value = 0.65;
     } else if (phase === 'exhale') {
       outerScale.value = withTiming(1.0, { duration: durationMs, easing: Easing.inOut(Easing.quad) });
       middleScale.value = withTiming(1.0, { duration: durationMs, easing: Easing.inOut(Easing.quad) });
-      haloOpacity.value = withTiming(0.3, { duration: durationMs });
+      haloOpacity.value = withTiming(0.4, { duration: durationMs });
     } else if (phase === 'rest') {
-      outerScale.value = withTiming(0.95, { duration: durationMs, easing: Easing.inOut(Easing.ease) });
+      outerScale.value = withTiming(0.96, { duration: durationMs, easing: Easing.inOut(Easing.ease) });
       middleScale.value = withTiming(0.98, { duration: durationMs });
-      haloOpacity.value = 0.25;
+      haloOpacity.value = 0.35;
     }
   }, [isActive, phase, phaseDuration]);
 
@@ -88,14 +91,49 @@ export function BreathingCircle({
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity activeOpacity={0.88} onPress={onPress} style={styles.touchable}>
-        {/* Outermost halo */}
-        <Animated.View style={[styles.outerRing, outerStyle]} />
-        {/* Middle layer */}
-        <Animated.View style={[styles.middleRing, middleStyle]} />
-        {/* Core button */}
-        <View style={styles.core}>
-          <Wind size={28} color={Colors.stone.ink} />
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={onPress}
+        style={[styles.touchable, { width: CIRCLE_CONTAINER_SIZE, height: CIRCLE_CONTAINER_SIZE }]}
+      >
+        {/* Outermost soft halo ring */}
+        <Animated.View
+          style={[
+            styles.outerRing,
+            {
+              width: CIRCLE_CONTAINER_SIZE * 0.92,
+              height: CIRCLE_CONTAINER_SIZE * 0.92,
+              borderRadius: (CIRCLE_CONTAINER_SIZE * 0.92) / 2,
+            },
+            outerStyle,
+          ]}
+        />
+
+        {/* Middle soft translucent ring */}
+        <Animated.View
+          style={[
+            styles.middleRing,
+            {
+              width: CIRCLE_CONTAINER_SIZE * 0.72,
+              height: CIRCLE_CONTAINER_SIZE * 0.72,
+              borderRadius: (CIRCLE_CONTAINER_SIZE * 0.72) / 2,
+            },
+            middleStyle,
+          ]}
+        />
+
+        {/* Core button with soft gradient depth */}
+        <View
+          style={[
+            styles.core,
+            {
+              width: CIRCLE_CONTAINER_SIZE * 0.48,
+              height: CIRCLE_CONTAINER_SIZE * 0.48,
+              borderRadius: (CIRCLE_CONTAINER_SIZE * 0.48) / 2,
+            },
+          ]}
+        >
+          <Wind size={24} color={Colors.stone.ink} strokeWidth={2.2} />
           <Text style={styles.coreLabel}>{phaseLabel}</Text>
           {isActive && phaseSecondsRemaining > 0 && (
             <Text style={styles.countdown}>{phaseSecondsRemaining}s</Text>
@@ -105,12 +143,12 @@ export function BreathingCircle({
 
       <View style={styles.instructionBox}>
         <Text style={styles.instruction}>
-          {isActive ? instruction : 'Tap the circle to begin guided calm'}
+          {isActive ? instruction : 'Tap circle to begin calm flow'}
         </Text>
         {!isActive && (
           <View style={styles.hintRow}>
-            <Sparkles size={13} color={Colors.coral.active} />
-            <Text style={styles.hint}>  100% offline · gentle haptics</Text>
+            <Sparkles size={12} color={Colors.coral.active} />
+            <Text style={styles.hint}> Offline sanctuary · Gentle haptics</Text>
           </View>
         )}
       </View>
@@ -118,49 +156,72 @@ export function BreathingCircle({
   );
 }
 
-const C = Colors.coral.accent;
-
 const styles = StyleSheet.create({
-  container: { alignItems: 'center', justifyContent: 'center', paddingVertical: 24 },
-  touchable: { width: 288, height: 288, alignItems: 'center', justifyContent: 'center' },
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 18,
+  },
+  touchable: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   outerRing: {
     position: 'absolute',
-    width: 256, height: 256,
-    borderRadius: 128,
-    backgroundColor: C,
+    backgroundColor: 'rgba(244, 162, 155, 0.25)',
   },
   middleRing: {
     position: 'absolute',
-    width: 192, height: 192,
-    borderRadius: 96,
-    backgroundColor: C,
-    opacity: 0.7,
+    backgroundColor: 'rgba(244, 162, 155, 0.45)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.65)',
   },
   core: {
-    width: 128, height: 128,
-    borderRadius: 64,
-    backgroundColor: C,
+    backgroundColor: '#FFE1DD',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: Colors.coral.deep,
+    shadowColor: '#8A3B36',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 8,
-    borderWidth: 1.5,
-    borderColor: 'rgba(255,255,255,0.6)',
+    shadowOpacity: 0.16,
+    shadowRadius: 14,
+    elevation: 6,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
   coreLabel: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: '700',
     letterSpacing: 1,
     textTransform: 'uppercase',
     color: Colors.stone.ink,
-    marginTop: 4,
+    marginTop: 3,
   },
-  countdown: { fontSize: 18, fontWeight: '600', color: Colors.stone.ink },
-  instructionBox: { marginTop: 16, paddingHorizontal: 24, alignItems: 'center' },
-  instruction: { fontSize: 13, fontWeight: '500', color: Colors.stone.body, textAlign: 'center', lineHeight: 20 },
-  hintRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
-  hint: { fontSize: 11, color: Colors.stone.muted },
+  countdown: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: Colors.coral.deep,
+    marginTop: 1,
+  },
+  instructionBox: {
+    marginTop: 12,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+  },
+  instruction: {
+    fontSize: 13.5,
+    fontWeight: '500',
+    color: Colors.stone.body,
+    textAlign: 'center',
+    lineHeight: 19,
+  },
+  hintRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 6,
+  },
+  hint: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: Colors.stone.muted,
+  },
 });

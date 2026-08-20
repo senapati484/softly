@@ -1,0 +1,40 @@
+dependencies: \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/node_modules/react-native/React/DevSupport/RCTPackagerConnection.mm \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Target\ Support\ Files/React-Core/React-Core-prefix.pch \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTPackagerConnection.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTDefines.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTInspectorDevServerHelper.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTAssert.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTBridge.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTBridgeDelegate.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTJavaScriptLoader.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTBridgeModule.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTJSThread.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/RCTDeprecation/RCTDeprecation.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTBundleManager.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTBridgeModuleDecorator.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTFrameUpdate.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTInvalidating.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTBridgeConstants.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTConstants.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTBundleURLProvider.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTConvert.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTAnimationType.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTBorderCurve.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTBorderStyle.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTCursor.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTLog.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTUtils.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTPointerEvents.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTTextDecorationLineType.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Public/Yoga/yoga/Yoga.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Public/Yoga/yoga/YGConfig.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Public/Yoga/yoga/YGEnums.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Public/Yoga/yoga/YGMacros.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Public/Yoga/yoga/YGNode.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Public/Yoga/yoga/YGNodeLayout.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Public/Yoga/yoga/YGNodeStyle.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Public/Yoga/yoga/YGValue.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Public/Yoga/yoga/YGPixelGrid.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTPackagerClient.h \
+  /Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Headers/Private/React-Core/React/RCTReconnectingWebSocket.h

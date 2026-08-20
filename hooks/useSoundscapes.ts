@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import { Audio } from 'expo-av';
 import { useSoftlyStore } from '../store/useSoftlyStore';
 
@@ -8,7 +8,8 @@ export interface SoundscapeTrack {
   description: string;
   mood: string;
   color: string;
-  uri?: string;
+  uri: string;
+  fallbackUri?: string;
 }
 
 export const SOUNDSCAPE_TRACKS: SoundscapeTrack[] = [
@@ -18,7 +19,8 @@ export const SOUNDSCAPE_TRACKS: SoundscapeTrack[] = [
     description: 'Gentle raindrops falling on wooden shingles and soft earth.',
     mood: 'Restful',
     color: '#E8EFE8',
-    uri: 'https://cdn.freesound.org/previews/530/530415_11861866-lq.mp3',
+    uri: 'https://moodist.mvze.net/sounds/rain/rain.mp3',
+    fallbackUri: 'https://moodist.mvze.net/sounds/rain/light-rain.mp3',
   },
   {
     id: 'forest',
@@ -26,7 +28,8 @@ export const SOUNDSCAPE_TRACKS: SoundscapeTrack[] = [
     description: 'Pine needles rustling in a cool mountain breeze.',
     mood: 'Clarity',
     color: '#F2F6F2',
-    uri: 'https://cdn.freesound.org/previews/268/268916_4921277-lq.mp3',
+    uri: 'https://moodist.mvze.net/sounds/nature/wind.mp3',
+    fallbackUri: 'https://moodist.mvze.net/sounds/nature/forest.mp3',
   },
   {
     id: 'library',
@@ -34,7 +37,8 @@ export const SOUNDSCAPE_TRACKS: SoundscapeTrack[] = [
     description: 'Warm acoustics, distant clock ticking, and soft page turns.',
     mood: 'Focus',
     color: '#EFEDF4',
-    uri: 'https://cdn.freesound.org/previews/415/415804_5121236-lq.mp3',
+    uri: 'https://moodist.mvze.net/sounds/places/library.mp3',
+    fallbackUri: 'https://moodist.mvze.net/sounds/noise/white-noise.mp3',
   },
 ];
 
@@ -46,13 +50,15 @@ async function setupAudioMode() {
   if (isAudioConfigured) return;
   try {
     await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
       playsInSilentModeIOS: true,
       staysActiveInBackground: true,
       shouldDuckAndroid: true,
+      playThroughEarpieceAndroid: false,
     });
     isAudioConfigured = true;
-  } catch {
-    // ignore
+  } catch (e) {
+    console.warn('Could not configure Audio mode:', e);
   }
 }
 
@@ -92,18 +98,38 @@ export function useSoundscapes() {
         const track = SOUNDSCAPE_TRACKS.find((t) => t.name === trackName) || SOUNDSCAPE_TRACKS[0];
         if (!track.uri) return;
 
-        const { sound } = await Audio.Sound.createAsync(
-          { uri: track.uri },
-          { isLooping: true, volume: soundVolume, shouldPlay: true }
-        );
+        let soundObj: Audio.Sound | null = null;
 
-        globalSoundInstance = sound;
-        setActiveSound(trackName);
-        setIsPlayingSound(true);
+        try {
+          const { sound } = await Audio.Sound.createAsync(
+            { uri: track.uri },
+            { isLooping: true, volume: soundVolume, shouldPlay: true },
+            undefined,
+            true // downloadFirst for smooth offline playback
+          );
+          soundObj = sound;
+        } catch (primaryErr) {
+          console.warn('Primary audio stream failed, trying fallback:', primaryErr);
+          if (track.fallbackUri) {
+            const { sound } = await Audio.Sound.createAsync(
+              { uri: track.fallbackUri },
+              { isLooping: true, volume: soundVolume, shouldPlay: true },
+              undefined,
+              true
+            );
+            soundObj = sound;
+          }
+        }
+
+        if (soundObj) {
+          globalSoundInstance = soundObj;
+          setActiveSound(trackName);
+          setIsPlayingSound(true);
+        }
       } catch (err) {
-        console.warn('Audio playback error (using silent fallback):', err);
+        console.warn('Audio playback error:', err);
         setActiveSound(trackName);
-        setIsPlayingSound(true);
+        setIsPlayingSound(false);
       }
     },
     [soundVolume, setActiveSound, setIsPlayingSound]

@@ -1,0 +1,16 @@
+{
+  "" : {
+    "const-values" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXConstants.build/Objects-normal/arm64/EXConstants-primary.swiftconstvalues",
+    "dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXConstants.build/Objects-normal/arm64/EXConstants-primary.d",
+    "diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXConstants.build/Objects-normal/arm64/EXConstants-primary.dia",
+    "emit-module-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXConstants.build/Objects-normal/arm64/EXConstants-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXConstants.build/Objects-normal/arm64/EXConstants-primary-emit-module.dia",
+    "pch" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXConstants.build/Objects-normal/arm64/EXConstants-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXConstants.build/Objects-normal/arm64/EXConstants-primary.swiftdeps"
+  },
+  "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/node_modules/expo-constants/ios/ConstantsModule.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXConstants.build/Objects-normal/arm64/ConstantsModule.o",
+    "llvm-bc" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXConstants.build/Objects-normal/arm64/ConstantsModule.bc",
+    "object" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/EXConstants.build/Objects-normal/arm64/ConstantsModule.o"
+  }
+}

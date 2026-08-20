@@ -1,0 +1,16 @@
+{
+  "" : {
+    "const-values" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoHaptics.build/Objects-normal/arm64/ExpoHaptics-primary.swiftconstvalues",
+    "dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoHaptics.build/Objects-normal/arm64/ExpoHaptics-primary.d",
+    "diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoHaptics.build/Objects-normal/arm64/ExpoHaptics-primary.dia",
+    "emit-module-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoHaptics.build/Objects-normal/arm64/ExpoHaptics-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoHaptics.build/Objects-normal/arm64/ExpoHaptics-primary-emit-module.dia",
+    "pch" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoHaptics.build/Objects-normal/arm64/ExpoHaptics-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoHaptics.build/Objects-normal/arm64/ExpoHaptics-primary.swiftdeps"
+  },
+  "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/node_modules/expo-haptics/ios/HapticsModule.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoHaptics.build/Objects-normal/arm64/HapticsModule.o",
+    "llvm-bc" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoHaptics.build/Objects-normal/arm64/HapticsModule.bc",
+    "object" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoHaptics.build/Objects-normal/arm64/HapticsModule.o"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "" : {
+    "diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/Softly-primary.dia",
+    "emit-module-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/Softly-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/Softly-primary-emit-module.dia",
+    "pch" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/Softly-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/Softly-primary.swiftdeps"
+  },
+  "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  },
+  "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Pods/Target Support Files/Pods-Softly/ExpoModulesProvider.swift" : {
+    "const-values" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/ExpoModulesProvider.swiftconstvalues",
+    "dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/ExpoModulesProvider.d",
+    "diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/ExpoModulesProvider.dia",
+    "index-unit-output-path" : "/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/ExpoModulesProvider.o",
+    "llvm-bc" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/ExpoModulesProvider.bc",
+    "object" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/ExpoModulesProvider.o",
+    "swift-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/ExpoModulesProvider.swiftdeps",
+    "swiftmodule" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/ExpoModulesProvider~partial.swiftmodule"
+  },
+  "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/ios/Softly/noop-file.swift" : {
+    "const-values" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/noop-file.swiftconstvalues",
+    "dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/noop-file.d",
+    "diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/noop-file.dia",
+    "index-unit-output-path" : "/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/noop-file.o",
+    "llvm-bc" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/noop-file.bc",
+    "object" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/noop-file.o",
+    "swift-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/noop-file.swiftdeps",
+    "swiftmodule" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Softly.build/Release-iphoneos/Softly.build/Objects-normal/arm64/noop-file~partial.swiftmodule"
+  }
+}

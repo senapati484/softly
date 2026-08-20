@@ -1,0 +1,16 @@
+{
+  "" : {
+    "const-values" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoAsset.build/Objects-normal/arm64/ExpoAsset-primary.swiftconstvalues",
+    "dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoAsset.build/Objects-normal/arm64/ExpoAsset-primary.d",
+    "diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoAsset.build/Objects-normal/arm64/ExpoAsset-primary.dia",
+    "emit-module-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoAsset.build/Objects-normal/arm64/ExpoAsset-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoAsset.build/Objects-normal/arm64/ExpoAsset-primary-emit-module.dia",
+    "pch" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoAsset.build/Objects-normal/arm64/ExpoAsset-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoAsset.build/Objects-normal/arm64/ExpoAsset-primary.swiftdeps"
+  },
+  "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/node_modules/expo-asset/ios/AssetModule.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoAsset.build/Objects-normal/arm64/AssetModule.o",
+    "llvm-bc" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoAsset.build/Objects-normal/arm64/AssetModule.bc",
+    "object" : "/Users/sayansenapati/Desktop/Dev/Innovation/softly-mobile/build/ios/Build/Intermediates.noindex/Pods.build/Release-iphoneos/ExpoAsset.build/Objects-normal/arm64/AssetModule.o"
+  }
+}
