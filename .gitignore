@@ -1,14 +1,31 @@
+# Node / Dependencies
 node_modules/
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Expo / Builds
 .expo/
 dist/
-npm-debug.*
+web-build/
+build/
+android/app/build/
+android/.gradle/
+ios/build/
+ios/Pods/
+*.xcresult
+*.orig.*
+
+# Android Keystores & Keys
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
-*.orig.*
-web-build/
 
 # macOS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
