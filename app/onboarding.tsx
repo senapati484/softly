@@ -22,6 +22,8 @@ import {
   Heart,
   Volume2,
   Check,
+  Sun,
+  Clock,
 } from 'lucide-react-native';
 import { Colors } from '../theme/colors';
 import { GrainTexture } from '../components/ui/GrainTexture';
@@ -82,6 +84,8 @@ function renderIntentionIcon(id: string, color: string) {
 }
 
 const DAILY_GOALS = [5, 10, 15, 20];
+const MORNING_TIMES = ['7:00 AM', '7:30 AM', '8:00 AM', '8:30 AM', '9:00 AM'];
+const NIGHT_TIMES = ['9:30 PM', '10:00 PM', '10:30 PM', '11:00 PM'];
 
 const SOUND_OPTIONS = [
   { name: 'Rain on Cedar', desc: 'Gentle raindrops on wood' },
@@ -92,13 +96,15 @@ const SOUND_OPTIONS = [
 
 export default function OnboardingScreen() {
   const router = useRouter();
-  const { completeOnboarding } = useSoftlyStore();
+  const { completeOnboarding, updateNotifications } = useSoftlyStore();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [name, setName] = useState('');
   const [selectedIntention, setSelectedIntention] = useState('Stillness & Stress Relief');
   const [selectedGoal, setSelectedGoal] = useState(10);
   const [selectedSound, setSelectedSound] = useState('Rain on Cedar');
+  const [selectedMorningTime, setSelectedMorningTime] = useState('8:30 AM');
+  const [selectedNightTime, setSelectedNightTime] = useState('10:00 PM');
 
   const triggerHaptic = () => {
     try {
@@ -121,6 +127,10 @@ export default function OnboardingScreen() {
         userIntention: selectedIntention,
         dailyGoalMinutes: selectedGoal,
         preferredSound: selectedSound === 'Pure Silence' ? '' : selectedSound,
+      });
+      updateNotifications({
+        morningTime: selectedMorningTime,
+        nightTime: selectedNightTime,
       });
       try {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -189,7 +199,7 @@ export default function OnboardingScreen() {
                 <TextInput
                   value={name}
                   onChangeText={setName}
-                  placeholder="e.g. Elena, Alex..."
+                  placeholder="e.g. Elena, Sayan..."
                   placeholderTextColor={Colors.stone.muted}
                   style={styles.textInput}
                   autoCapitalize="words"
@@ -204,7 +214,7 @@ export default function OnboardingScreen() {
 
               <View style={styles.privacyNote}>
                 <Text style={styles.privacyText}>
-                  🔒 Stored safely and privately on your device only.
+                  🔒 100% private. Stored safely on your device only.
                 </Text>
               </View>
             </View>
@@ -218,7 +228,7 @@ export default function OnboardingScreen() {
                 <Text style={styles.badgePillText}>Daily Practice</Text>
               </View>
 
-              <Text style={styles.title}>What is your main intention, {name}?</Text>
+              <Text style={styles.title}>What is your main focus, {name}?</Text>
               <Text style={styles.subtitle}>
                 We will tune your gentle rituals and daily pebble around this focus.
               </Text>
@@ -319,10 +329,82 @@ export default function OnboardingScreen() {
                 </View>
               </View>
 
+              {/* Morning Pebble Schedule */}
+              <View style={styles.sectionBlock}>
+                <View style={styles.sectionHeaderRow}>
+                  <Sun size={14} color={Colors.stone.body} />
+                  <Text style={styles.sectionLabel}>MORNING PEBBLE TIME</Text>
+                </View>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.timeScroll}>
+                  {MORNING_TIMES.map((t) => {
+                    const isSelected = selectedMorningTime === t;
+                    return (
+                      <TouchableOpacity
+                        key={t}
+                        activeOpacity={0.7}
+                        onPress={() => {
+                          triggerHaptic();
+                          setSelectedMorningTime(t);
+                        }}
+                        style={[
+                          styles.timePill,
+                          isSelected && styles.timePillSelected,
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.timePillText,
+                            isSelected && styles.timePillTextSelected,
+                          ]}
+                        >
+                          {t}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </View>
+
+              {/* Night Wind-Down Schedule */}
+              <View style={styles.sectionBlock}>
+                <View style={styles.sectionHeaderRow}>
+                  <Moon size={14} color={Colors.stone.body} />
+                  <Text style={styles.sectionLabel}>EVENING DUSK SHIFT</Text>
+                </View>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.timeScroll}>
+                  {NIGHT_TIMES.map((t) => {
+                    const isSelected = selectedNightTime === t;
+                    return (
+                      <TouchableOpacity
+                        key={t}
+                        activeOpacity={0.7}
+                        onPress={() => {
+                          triggerHaptic();
+                          setSelectedNightTime(t);
+                        }}
+                        style={[
+                          styles.timePill,
+                          isSelected && styles.timePillSelected,
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.timePillText,
+                            isSelected && styles.timePillTextSelected,
+                          ]}
+                        >
+                          {t}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </View>
+
               {/* Ambient Sound Selector */}
               <View style={styles.sectionBlock}>
                 <View style={styles.sectionHeaderRow}>
-                  <Volume2 size={15} color={Colors.stone.body} />
+                  <Volume2 size={14} color={Colors.stone.body} />
                   <Text style={styles.sectionLabel}>DEFAULT AMBIENT SOUND</Text>
                 </View>
 
@@ -415,7 +497,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 28,
+    marginBottom: 24,
   },
   brandRow: {
     flexDirection: 'row',
@@ -483,10 +565,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.stone.body,
     lineHeight: 21,
-    marginBottom: 12,
+    marginBottom: 10,
   },
   inputWrapper: {
-    marginTop: 8,
+    marginTop: 6,
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderRadius: 20,
     padding: 16,
@@ -586,28 +668,28 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   sectionLabel: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: '700',
     letterSpacing: 0.8,
     color: Colors.stone.muted,
-    marginBottom: 10,
+    marginBottom: 8,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginBottom: 10,
+    marginBottom: 8,
   },
   goalRow: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 8,
   },
   goalPill: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 16,
+    borderRadius: 14,
     backgroundColor: 'rgba(255, 255, 255, 0.85)',
     borderWidth: 1,
     borderColor: 'rgba(214, 211, 208, 0.6)',
@@ -617,11 +699,35 @@ const styles = StyleSheet.create({
     borderColor: Colors.stone.ink,
   },
   goalPillText: {
-    fontSize: 13,
+    fontSize: 12.5,
     fontWeight: '600',
     color: Colors.stone.ink,
   },
   goalPillTextSelected: {
+    color: '#FFFFFF',
+  },
+  timeScroll: {
+    gap: 8,
+    paddingBottom: 4,
+  },
+  timePill: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    borderWidth: 1,
+    borderColor: 'rgba(214, 211, 208, 0.6)',
+  },
+  timePillSelected: {
+    backgroundColor: Colors.stone.ink,
+    borderColor: Colors.stone.ink,
+  },
+  timePillText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: Colors.stone.body,
+  },
+  timePillTextSelected: {
     color: '#FFFFFF',
   },
   soundGrid: {
@@ -630,7 +736,7 @@ const styles = StyleSheet.create({
   soundCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.85)',
     borderRadius: 16,
-    padding: 14,
+    padding: 13,
     borderWidth: 1,
     borderColor: 'rgba(214, 211, 208, 0.6)',
   },
@@ -647,15 +753,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 3,
+    marginBottom: 2,
   },
   soundName: {
-    fontSize: 13.5,
+    fontSize: 13,
     fontWeight: '600',
     color: Colors.stone.ink,
   },
   soundDesc: {
-    fontSize: 11.5,
+    fontSize: 11,
     color: Colors.stone.muted,
   },
   checkPill: {

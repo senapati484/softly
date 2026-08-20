@@ -50,7 +50,9 @@ const SOUND_OPTIONS = [
   'Pure Silence',
 ];
 
+const MORNING_TIMES = ['7:00 AM', '7:30 AM', '8:00 AM', '8:30 AM', '9:00 AM'];
 const UNPLUG_INTERVALS = [30, 45, 60, 90];
+const NIGHT_TIMES = ['9:30 PM', '10:00 PM', '10:30 PM', '11:00 PM'];
 
 export default function ProfileModal() {
   const router = useRouter();
@@ -76,11 +78,13 @@ export default function ProfileModal() {
   const [sound, setSound] = useState(preferredSound || 'Rain on Cedar');
   const [haptics, setHaptics] = useState(hapticsEnabled);
 
-  // Notification states
+  // Notification time states
   const [morningPebble, setMorningPebble] = useState(notifications?.morningPebblePrompt ?? true);
+  const [morningTime, setMorningTime] = useState(notifications?.morningTime ?? '8:30 AM');
   const [unplugActive, setUnplugActive] = useState(notifications?.unplugReminders ?? true);
   const [unplugInterval, setUnplugInterval] = useState(notifications?.unplugIntervalMinutes ?? 60);
   const [nightWindDown, setNightWindDown] = useState(notifications?.nightWindDown ?? true);
+  const [nightTime, setNightTime] = useState(notifications?.nightTime ?? '10:00 PM');
 
   const triggerHaptic = () => {
     if (haptics) {
@@ -101,9 +105,11 @@ export default function ProfileModal() {
     });
     updateNotifications({
       morningPebblePrompt: morningPebble,
+      morningTime: morningTime,
       unplugReminders: unplugActive,
       unplugIntervalMinutes: unplugInterval,
       nightWindDown: nightWindDown,
+      nightTime: nightTime,
     });
     setHapticsEnabled(haptics);
     if (haptics) {
@@ -326,12 +332,12 @@ export default function ProfileModal() {
         </View>
 
         {/* ============================================================ */}
-        {/* GENTLE NOTIFICATIONS & QUIET REMINDERS                       */}
+        {/* QUIET NOTIFICATIONS & TIMING SETTINGS                        */}
         {/* ============================================================ */}
         <View style={styles.section}>
           <View style={styles.sectionHeaderRow}>
             <Bell size={14} color={Colors.coral.deep} />
-            <Text style={styles.sectionTitle}>QUIET NOTIFICATIONS</Text>
+            <Text style={styles.sectionTitle}>QUIET NOTIFICATIONS & SCHEDULE</Text>
           </View>
 
           <View style={styles.notifCard}>
@@ -340,10 +346,10 @@ export default function ProfileModal() {
               <View style={styles.notifInfo}>
                 <View style={styles.notifLabelRow}>
                   <Sun size={13} color={Colors.stone.body} />
-                  <Text style={styles.notifTitle}>Morning Pebble Prompt</Text>
+                  <Text style={styles.notifTitle}>Morning Pebble Reminder</Text>
                 </View>
                 <Text style={styles.notifDesc}>
-                  Daily grounding thought at 8:30 AM (Silent)
+                  Daily morning reflection prompt ({morningTime})
                 </Text>
               </View>
               <Switch
@@ -356,6 +362,37 @@ export default function ProfileModal() {
                 thumbColor="#FFFFFF"
               />
             </View>
+
+            {/* Morning Time Chips */}
+            {morningPebble && (
+              <View style={styles.timeSelectorRow}>
+                <Text style={styles.timeSelectorLabel}>Morning time:</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.timeChips}>
+                  {MORNING_TIMES.map((t) => (
+                    <TouchableOpacity
+                      key={t}
+                      onPress={() => {
+                        triggerHaptic();
+                        setMorningTime(t);
+                      }}
+                      style={[
+                        styles.timeChip,
+                        morningTime === t && styles.timeChipActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.timeChipText,
+                          morningTime === t && styles.timeChipTextActive,
+                        ]}
+                      >
+                        {t}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
 
             <View style={styles.divider} />
 
@@ -382,9 +419,9 @@ export default function ProfileModal() {
             </View>
 
             {unplugActive && (
-              <View style={styles.intervalRow}>
-                <Text style={styles.intervalLabel}>Interval:</Text>
-                <View style={styles.intervalChips}>
+              <View style={styles.timeSelectorRow}>
+                <Text style={styles.timeSelectorLabel}>Pause interval:</Text>
+                <View style={styles.timeChips}>
                   {UNPLUG_INTERVALS.map((mins) => (
                     <TouchableOpacity
                       key={mins}
@@ -393,14 +430,14 @@ export default function ProfileModal() {
                         setUnplugInterval(mins);
                       }}
                       style={[
-                        styles.intervalChip,
-                        unplugInterval === mins && styles.intervalChipActive,
+                        styles.timeChip,
+                        unplugInterval === mins && styles.timeChipActive,
                       ]}
                     >
                       <Text
                         style={[
-                          styles.intervalChipText,
-                          unplugInterval === mins && styles.intervalChipTextActive,
+                          styles.timeChipText,
+                          unplugInterval === mins && styles.timeChipTextActive,
                         ]}
                       >
                         {mins}m
@@ -421,7 +458,7 @@ export default function ProfileModal() {
                   <Text style={styles.notifTitle}>Night Sanctuary Wind-Down</Text>
                 </View>
                 <Text style={styles.notifDesc}>
-                  Reminder to engage amber warmth at 10:00 PM
+                  Warm amber transition prompt ({nightTime})
                 </Text>
               </View>
               <Switch
@@ -434,6 +471,37 @@ export default function ProfileModal() {
                 thumbColor="#FFFFFF"
               />
             </View>
+
+            {/* Night Time Chips */}
+            {nightWindDown && (
+              <View style={styles.timeSelectorRow}>
+                <Text style={styles.timeSelectorLabel}>Bedtime:</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.timeChips}>
+                  {NIGHT_TIMES.map((t) => (
+                    <TouchableOpacity
+                      key={t}
+                      onPress={() => {
+                        triggerHaptic();
+                        setNightTime(t);
+                      }}
+                      style={[
+                        styles.timeChip,
+                        nightTime === t && styles.timeChipActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.timeChipText,
+                          nightTime === t && styles.timeChipTextActive,
+                        ]}
+                      >
+                        {t}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
 
             {/* Quiet Pledge */}
             <View style={styles.pledgeRow}>
@@ -762,36 +830,40 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: Colors.stone.muted,
   },
-  intervalRow: {
+  timeSelectorRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 4,
+    paddingTop: 2,
   },
-  intervalLabel: {
+  timeSelectorLabel: {
     fontSize: 11.5,
     color: Colors.stone.body,
     fontWeight: '500',
+    marginRight: 8,
   },
-  intervalChips: {
+  timeChips: {
     flexDirection: 'row',
     gap: 6,
   },
-  intervalChip: {
+  timeChip: {
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 5,
     borderRadius: 99,
-    backgroundColor: 'rgba(214, 211, 208, 0.3)',
+    backgroundColor: 'rgba(214, 211, 208, 0.35)',
+    borderWidth: 1,
+    borderColor: 'transparent',
   },
-  intervalChipActive: {
+  timeChipActive: {
     backgroundColor: Colors.stone.ink,
+    borderColor: Colors.stone.ink,
   },
-  intervalChipText: {
+  timeChipText: {
     fontSize: 11,
     fontWeight: '600',
     color: Colors.stone.body,
   },
-  intervalChipTextActive: {
+  timeChipTextActive: {
     color: '#FFFFFF',
   },
   divider: {
