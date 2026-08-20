@@ -36,6 +36,10 @@ export function useBreatheEngine() {
   const [totalSecondsElapsed, setTotalSecondsElapsed] = useState(0);
   const [completedCycles, setCompletedCycles] = useState(0);
 
+  const isActiveRef = useRef(false);
+  const totalSecondsElapsedRef = useRef(0);
+  const completedCyclesRef = useRef(0);
+
   const patternSteps = PATTERNS[breathePattern] || PATTERNS['4-7-8'];
   const patternStepsRef = useRef(patternSteps);
   patternStepsRef.current = patternSteps;
@@ -64,28 +68,34 @@ export function useBreatheEngine() {
 
   const startBreathing = useCallback(() => {
     setIsActive(true);
+    isActiveRef.current = true;
     setCurrentPhaseIndex(0);
     setPhaseSecondsRemaining(patternStepsRef.current[0].duration);
     setTotalSecondsElapsed(0);
+    totalSecondsElapsedRef.current = 0;
     setCompletedCycles(0);
+    completedCyclesRef.current = 0;
     triggerHaptic(patternStepsRef.current[0].phase);
   }, [triggerHaptic]);
 
   const stopBreathing = useCallback(() => {
-    if (isActive && totalSecondsElapsed >= 15) {
-      const minutes = Math.max(1, Math.round(totalSecondsElapsed / 60));
+    const elapsed = totalSecondsElapsedRef.current;
+    if (isActiveRef.current && elapsed >= 15) {
+      const minutes = Math.max(1, Math.round(elapsed / 60));
       recordBreathingSession(minutes);
     }
     setIsActive(false);
+    isActiveRef.current = false;
     setCurrentPhaseIndex(0);
     setPhaseSecondsRemaining(0);
-  }, [isActive, totalSecondsElapsed, recordBreathingSession]);
+  }, [recordBreathingSession]);
 
   useEffect(() => {
     if (!isActive) return;
 
     const interval = setInterval(() => {
-      setTotalSecondsElapsed((t) => t + 1);
+      totalSecondsElapsedRef.current += 1;
+      setTotalSecondsElapsed(totalSecondsElapsedRef.current);
 
       setPhaseSecondsRemaining((prevRemaining) => {
         if (prevRemaining <= 1) {
@@ -95,7 +105,8 @@ export function useBreatheEngine() {
             const steps = patternStepsRef.current;
             const nextIndex = (prevIndex + 1) % steps.length;
             if (nextIndex === 0) {
-              setCompletedCycles((c) => c + 1);
+              completedCyclesRef.current += 1;
+              setCompletedCycles(completedCyclesRef.current);
             }
             triggerHaptic(steps[nextIndex].phase);
             nextRemaining = steps[nextIndex].duration;
@@ -107,8 +118,14 @@ export function useBreatheEngine() {
       });
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, [isActive, triggerHaptic]);
+    return () => {
+      clearInterval(interval);
+      if (isActiveRef.current && totalSecondsElapsedRef.current >= 15) {
+        const minutes = Math.max(1, Math.round(totalSecondsElapsedRef.current / 60));
+        recordBreathingSession(minutes);
+      }
+    };
+  }, [isActive, triggerHaptic, recordBreathingSession]);
 
   return {
     isActive,

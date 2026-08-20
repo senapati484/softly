@@ -143,7 +143,7 @@ export default function ProfileModal() {
   const initialLetter = (name.trim() || 'S')[0].toUpperCase();
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.safe} edges={['top']}>
       <GrainTexture />
 
       {/* Header */}
@@ -931,8 +931,8 @@ const styles = StyleSheet.create({
   },
   bottomBar: {
     paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: Platform.OS === 'ios' ? 12 : 16,
+    paddingTop: 12,
+    paddingBottom: Platform.OS === 'ios' ? 32 : 18,
     backgroundColor: Colors.cream.canvas,
     borderTopWidth: 1,
     borderTopColor: 'rgba(231, 229, 228, 0.7)',
