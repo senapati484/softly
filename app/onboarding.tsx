@@ -119,6 +119,8 @@ const SOUND_OPTIONS = [
   { name: 'Pure Silence', desc: 'No background audio' },
 ];
 
+import { requestNotificationPermissionAndWelcome } from '../services/notificationService';
+
 export default function OnboardingScreen() {
   const router = useRouter();
   const { completeOnboarding, updateNotifications } = useSoftlyStore();
@@ -139,7 +141,7 @@ export default function OnboardingScreen() {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     triggerHaptic();
     if (step === 1) {
       if (!name.trim()) return;
@@ -147,8 +149,9 @@ export default function OnboardingScreen() {
     } else if (step === 2) {
       setStep(3);
     } else if (step === 3) {
+      const trimmedName = name.trim() || 'Friend';
       completeOnboarding({
-        userName: name.trim() || 'Friend',
+        userName: trimmedName,
         userIntention: selectedIntention,
         dailyGoalMinutes: selectedGoal,
         preferredSound: selectedSound === 'Pure Silence' ? '' : selectedSound,
@@ -157,6 +160,14 @@ export default function OnboardingScreen() {
         morningTime: selectedMorningTime,
         nightTime: selectedNightTime,
       });
+
+      // Request native notification permissions and dispatch welcome notification
+      try {
+        await requestNotificationPermissionAndWelcome(trimmedName);
+      } catch (err) {
+        console.warn('Could not dispatch welcome notification:', err);
+      }
+
       try {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       } catch {

@@ -34,6 +34,7 @@ import {
 import { Colors } from '../../theme/colors';
 import { GrainTexture } from '../../components/ui/GrainTexture';
 import { useSoftlyStore } from '../../store/useSoftlyStore';
+import { requestNotificationPermissionAndWelcome } from '../../services/notificationService';
 
 const INTENTIONS = [
   'Stillness & Stress Relief',
@@ -124,9 +125,10 @@ export default function ProfileModal() {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    const finalName = name.trim() || 'Friend';
     updateProfile({
-      userName: name.trim() || 'Friend',
+      userName: finalName,
       userIntention: intention,
       dailyGoalMinutes: goal,
       preferredSound: sound === 'Pure Silence' ? '' : sound,
@@ -140,6 +142,15 @@ export default function ProfileModal() {
       nightTime: nightTime,
     });
     setHapticsEnabled(haptics);
+
+    if (morningPebble || unplugActive || nightWindDown) {
+      try {
+        await requestNotificationPermissionAndWelcome(finalName);
+      } catch (err) {
+        console.warn('Could not request notification permissions:', err);
+      }
+    }
+
     if (haptics) {
       try {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);

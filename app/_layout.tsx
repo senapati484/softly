@@ -13,6 +13,7 @@ import {
 import { Colors } from '../theme/colors';
 import { useSoftlyStore } from '../store/useSoftlyStore';
 import { AnimatedSplashScreen } from '../components/ui/AnimatedSplashScreen';
+import { setupNotificationChannel } from '../services/notificationService';
 
 export default function RootLayout() {
   const router = useRouter();
@@ -27,6 +28,10 @@ export default function RootLayout() {
     Outfit_500Medium,
     Outfit_600SemiBold,
   });
+
+  useEffect(() => {
+    setupNotificationChannel();
+  }, []);
 
   useEffect(() => {
     if (fontsLoaded && isSplashComplete) {

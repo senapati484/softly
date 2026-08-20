@@ -1,5 +1,6 @@
 import { useRef, useCallback } from 'react';
 import { Audio, AVPlaybackSource } from 'expo-av';
+import { Asset } from 'expo-asset';
 import { useSoftlyStore } from '../store/useSoftlyStore';
 
 export interface SoundscapeTrack {
@@ -8,7 +9,7 @@ export interface SoundscapeTrack {
   description: string;
   mood: string;
   color: string;
-  source: AVPlaybackSource;
+  source: number;
 }
 
 export const SOUNDSCAPE_TRACKS: SoundscapeTrack[] = [
@@ -49,7 +50,7 @@ async function setupAudioMode() {
       allowsRecordingIOS: false,
       playsInSilentModeIOS: true,
       staysActiveInBackground: true,
-      shouldDuckAndroid: true,
+      shouldDuckAndroid: false,
       playThroughEarpieceAndroid: false,
     });
     isAudioConfigured = true;
@@ -93,16 +94,27 @@ export function useSoundscapes() {
 
         const track = SOUNDSCAPE_TRACKS.find((t) => t.name === trackName) || SOUNDSCAPE_TRACKS[0];
 
+        // Ensure asset is downloaded and local on physical device storage
+        try {
+          const asset = Asset.fromModule(track.source);
+          if (!asset.downloaded) {
+            await asset.downloadAsync();
+          }
+        } catch {
+          // fallback to raw source if asset download is not needed
+        }
+
         const { sound } = await Audio.Sound.createAsync(
           track.source,
           { isLooping: true, volume: soundVolume, shouldPlay: true }
         );
 
         globalSoundInstance = sound;
+        await sound.playAsync();
         setActiveSound(trackName);
         setIsPlayingSound(true);
       } catch (err) {
-        console.warn('Audio playback error:', err);
+        console.warn('Audio playback error on device:', err);
         setActiveSound(trackName);
         setIsPlayingSound(false);
       }
