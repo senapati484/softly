@@ -58,10 +58,10 @@ export default function QuietRoomScreen() {
             <Sparkles size={11} color={Colors.coral.deep} />
             <Text style={styles.greetingTag}>{userIntention || 'Living Room'}</Text>
           </View>
-          <Text style={styles.greetingText}>
-            {getGreeting()},{' '}
+          <View style={styles.greetingTitleRow}>
+            <Text style={styles.greetingText}>{getGreeting()},{' '}</Text>
             <Text style={styles.greetingName}>{userName || 'Friend'}</Text>
-          </Text>
+          </View>
           <Text style={styles.greetingSub}>Your space is calm and ready.</Text>
         </View>
 
@@ -200,13 +200,27 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   greetingTag: { fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase', color: Colors.stone.muted },
-  greetingText: { fontSize: 28, fontWeight: '300', color: Colors.stone.ink, marginTop: 2 },
+  greetingTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    flexWrap: 'wrap',
+    marginTop: 2,
+  },
+  greetingText: {
+    fontSize: 28,
+    fontWeight: '300',
+    color: Colors.stone.ink,
+  },
   greetingName: {
     fontFamily: 'ReenieBeanie_400Regular',
-    fontSize: 38,
+    fontSize: 40,
     color: '#e8908a',
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+    lineHeight: 40,
+    transform: [{ rotate: '-2deg' }],
   },
-  greetingSub: { fontSize: 12, color: Colors.stone.muted, marginTop: 2 },
+  greetingSub: { fontSize: 12, color: Colors.stone.muted, marginTop: 4 },
   patternWrap: { marginBottom: 8 },
   sessionStats: {
     flexDirection: 'row',
