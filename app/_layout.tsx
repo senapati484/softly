@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -12,11 +12,13 @@ import {
 } from '@expo-google-fonts/outfit';
 import { Colors } from '../theme/colors';
 import { useSoftlyStore } from '../store/useSoftlyStore';
+import { AnimatedSplashScreen } from '../components/ui/AnimatedSplashScreen';
 
 export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
   const { hasCompletedOnboarding } = useSoftlyStore();
+  const [isSplashComplete, setIsSplashComplete] = useState(false);
 
   const [fontsLoaded] = useFonts({
     ReenieBeanie_400Regular,
@@ -27,15 +29,13 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    const inOnboarding = segments[0] === 'onboarding';
-    if (!hasCompletedOnboarding && !inOnboarding) {
-      router.replace('/onboarding');
+    if (fontsLoaded && isSplashComplete) {
+      const inOnboarding = segments[0] === 'onboarding';
+      if (!hasCompletedOnboarding && !inOnboarding) {
+        router.replace('/onboarding');
+      }
     }
-  }, [hasCompletedOnboarding, segments]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
+  }, [hasCompletedOnboarding, segments, fontsLoaded, isSplashComplete]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: Colors.cream.canvas }}>
@@ -67,6 +67,11 @@ export default function RootLayout() {
             }}
           />
         </Stack>
+
+        {/* Smooth Breathing Splash Screen Overlay */}
+        {!isSplashComplete && (
+          <AnimatedSplashScreen onAnimationComplete={() => setIsSplashComplete(true)} />
+        )}
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
