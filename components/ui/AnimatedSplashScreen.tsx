@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View, Image, Text } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -10,7 +10,6 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import * as SplashScreen from 'expo-splash-screen';
-import { Colors } from '../../theme/colors';
 
 // Keep native splash screen visible while custom animated splash mounts
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -22,7 +21,7 @@ interface AnimatedSplashScreenProps {
 export const AnimatedSplashScreen: React.FC<AnimatedSplashScreenProps> = ({
   onAnimationComplete,
 }) => {
-  // Shared values for the breathing cycle
+  // Shared values for the subtle breathing cycle
   const scale = useSharedValue(0.96);
   const haloScale = useSharedValue(0.92);
   const haloOpacity = useSharedValue(0.25);
@@ -32,7 +31,7 @@ export const AnimatedSplashScreen: React.FC<AnimatedSplashScreenProps> = ({
     // Hide the static native splash screen immediately so our animated one is seen
     SplashScreen.hideAsync().catch(() => {});
 
-    // Gentle rhythmic breathing easing (2200ms inhale, 2200ms exhale)
+    // Gentle rhythmic breathing easing (2000ms inhale, 2000ms exhale)
     const breathEasing = Easing.bezier(0.42, 0, 0.58, 1);
 
     scale.value = withRepeat(
@@ -62,7 +61,7 @@ export const AnimatedSplashScreen: React.FC<AnimatedSplashScreenProps> = ({
       true
     );
 
-    // After 2.4s (one complete gentle breath), smoothly fade out splash screen
+    // After 2.4s, smoothly fade out splash screen
     const timer = setTimeout(() => {
       containerOpacity.value = withTiming(
         0,
@@ -93,7 +92,7 @@ export const AnimatedSplashScreen: React.FC<AnimatedSplashScreenProps> = ({
 
   return (
     <Animated.View style={[styles.container, containerAnimatedStyle]}>
-      {/* Centered Breathing Logo & Halo */}
+      {/* Centered Breathing Logo Only */}
       <View style={styles.centerWrap}>
         {/* Soft Ambient Halo */}
         <Animated.View style={[styles.halo, haloAnimatedStyle]} />
@@ -106,12 +105,6 @@ export const AnimatedSplashScreen: React.FC<AnimatedSplashScreenProps> = ({
             resizeMode="cover"
           />
         </Animated.View>
-
-        {/* Brand Text */}
-        <View style={styles.textWrap}>
-          <Text style={styles.brandTitle}>Softly</Text>
-          <Text style={styles.brandSubtitle}>breathe in...</Text>
-        </View>
       </View>
     </Animated.View>
   );
@@ -156,22 +149,5 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 28,
-  },
-  textWrap: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  brandTitle: {
-    fontSize: 22,
-    fontWeight: '300',
-    color: '#292524',
-    letterSpacing: -0.5,
-  },
-  brandSubtitle: {
-    fontFamily: 'ReenieBeanie_400Regular',
-    fontSize: 26,
-    color: '#e8908a',
-    marginTop: 2,
-    transform: [{ rotate: '-2deg' }],
   },
 });
