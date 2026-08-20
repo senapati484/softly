@@ -2,18 +2,60 @@ import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Volume2, Coffee, Play, Pause, User, Sparkles } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
+import { Volume2, Coffee, Play, Pause, Sparkles, Activity, ArrowRight, Heart } from 'lucide-react-native';
 import { BreathingCircle } from '../../components/breathe/BreathingCircle';
 import { PatternSelector } from '../../components/breathe/PatternSelector';
 import { GrainTexture } from '../../components/ui/GrainTexture';
 import { useBreatheEngine } from '../../hooks/useBreatheEngine';
-import { useSoftlyStore } from '../../store/useSoftlyStore';
+import { useSoftlyStore, UserCurrentState } from '../../store/useSoftlyStore';
 import { useSoundscapes } from '../../hooks/useSoundscapes';
 import { Colors } from '../../theme/colors';
 
+const STATES: { id: UserCurrentState; emoji: string; label: string; tip: string; pattern: string }[] = [
+  {
+    id: 'Overwhelmed',
+    emoji: '🌪️',
+    label: 'Overwhelmed',
+    tip: 'Deep 4-7-8 exhalations engage your parasympathetic nervous system to quickly diffuse stress.',
+    pattern: '4-7-8 Relax',
+  },
+  {
+    id: 'Restless',
+    emoji: '🌊',
+    label: 'Restless',
+    tip: 'Equal 4-second box cycles stabilize heart-rate variability and restore deep cognitive clarity.',
+    pattern: 'Box Focus',
+  },
+  {
+    id: 'Fatigued',
+    emoji: '☁️',
+    label: 'Fatigued',
+    tip: 'Gentle 3-second natural flow gently oxygenates your brain without taxing your body.',
+    pattern: 'Gentle 3-3',
+  },
+  {
+    id: 'Peaceful',
+    emoji: '🌿',
+    label: 'Peaceful',
+    tip: 'Sustaining a gentle breath rhythm preserves your quiet equilibrium throughout the day.',
+    pattern: 'Gentle 3-3',
+  },
+];
+
 export default function QuietRoomScreen() {
   const router = useRouter();
-  const { userName, userIntention, unplugRemainingMinutes, isUnplugActive, toggleUnplug } = useSoftlyStore();
+  const {
+    userName,
+    userIntention,
+    currentState,
+    setCurrentState,
+    breathePattern,
+    hapticsEnabled,
+    unplugRemainingMinutes,
+    isUnplugActive,
+    toggleUnplug,
+  } = useSoftlyStore();
   const { activeSound, isPlayingSound, toggleSound } = useSoundscapes();
   const breathe = useBreatheEngine();
 
@@ -24,7 +66,20 @@ export default function QuietRoomScreen() {
     return 'Good evening';
   };
 
-  const initialLetter = (userName?.trim() || 'F')[0].toUpperCase();
+  const initialLetter = (userName?.trim() || 'S')[0].toUpperCase();
+
+  const handleSelectState = (state: UserCurrentState) => {
+    if (hapticsEnabled) {
+      try {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      } catch {
+        // ignore
+      }
+    }
+    setCurrentState(state);
+  };
+
+  const activeStateInfo = STATES.find((s) => s.id === currentState) || STATES[0];
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -64,6 +119,59 @@ export default function QuietRoomScreen() {
           </View>
           <Text style={styles.greetingSub}>Your space is calm and ready.</Text>
         </View>
+
+        {/* State Check-in Carousel (only when idle) */}
+        {!breathe.isActive && (
+          <View style={styles.stateSection}>
+            <View style={styles.stateHeader}>
+              <Text style={styles.stateTitle}>STATE CHECK-IN</Text>
+              <Text style={styles.stateSub}>How is your mind feeling right now?</Text>
+            </View>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.stateScroll}
+            >
+              {STATES.map((s) => {
+                const isSelected = currentState === s.id;
+                return (
+                  <TouchableOpacity
+                    key={s.id}
+                    activeOpacity={0.7}
+                    onPress={() => handleSelectState(s.id)}
+                    style={[
+                      styles.statePill,
+                      isSelected && styles.statePillActive,
+                    ]}
+                  >
+                    <Text style={styles.stateEmoji}>{s.emoji}</Text>
+                    <Text
+                      style={[
+                        styles.statePillText,
+                        isSelected && styles.statePillTextActive,
+                      ]}
+                    >
+                      {s.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+
+            {/* Dynamic Recommendation Banner */}
+            <View style={styles.recBanner}>
+              <View style={styles.recHeader}>
+                <View style={styles.recBadge}>
+                  <Sparkles size={10} color={Colors.coral.deep} />
+                  <Text style={styles.recBadgeText}>Recommended</Text>
+                </View>
+                <Text style={styles.recPatternName}>{activeStateInfo.pattern}</Text>
+              </View>
+              <Text style={styles.recTip}>{activeStateInfo.tip}</Text>
+            </View>
+          </View>
+        )}
 
         {/* Pattern selector (only when idle) */}
         {!breathe.isActive && (
@@ -118,30 +226,34 @@ export default function QuietRoomScreen() {
             </Text>
           </View>
           <View style={[styles.audioBtn, isPlayingSound && styles.audioBtnActive]}>
-            {isPlayingSound
-              ? <Pause size={12} color={Colors.stone.ink} />
-              : <Play size={12} color={Colors.stone.ink} style={{ marginLeft: 2 }} />}
+            {isPlayingSound ? (
+              <Pause size={13} color={Colors.stone.ink} />
+            ) : (
+              <Play size={13} color={Colors.stone.ink} style={{ marginLeft: 2 }} />
+            )}
           </View>
         </TouchableOpacity>
 
-        {/* Unplug card */}
+        {/* Unplug window card */}
         <TouchableOpacity
-          activeOpacity={0.85}
+          activeOpacity={0.8}
           onPress={toggleUnplug}
           style={styles.unplugCard}
         >
           <View style={styles.unplugIcon}>
-            <Coffee size={17} color={Colors.sage.deep} />
+            <Coffee size={16} color={Colors.sage.deep} />
           </View>
           <View style={styles.unplugInfo}>
             <Text style={styles.unplugTitle}>Unplug Window</Text>
             <Text style={styles.unplugSub}>
-              {isUnplugActive ? `Next mindful pause in ${unplugRemainingMinutes} min` : 'Detox timer paused'}
+              {isUnplugActive
+                ? `Next mindful pause in ${unplugRemainingMinutes} min`
+                : 'Pause paused — tap to resume'}
             </Text>
           </View>
           <View style={[styles.unplugBadge, isUnplugActive && styles.unplugBadgeActive]}>
             <Text style={[styles.unplugBadgeText, isUnplugActive && styles.unplugBadgeTextActive]}>
-              {isUnplugActive ? 'Active' : 'Paused'}
+              {isUnplugActive ? 'Active' : 'Off'}
             </Text>
           </View>
         </TouchableOpacity>
@@ -152,38 +264,57 @@ export default function QuietRoomScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.cream.canvas },
-  scroll: { paddingHorizontal: 20, paddingBottom: 120 },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 12, paddingBottom: 16 },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  dot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#34D399' },
-  headerTag: { fontSize: 11, fontWeight: '700', letterSpacing: 1, textTransform: 'uppercase', color: Colors.stone.muted },
+  scroll: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 110 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#86efac',
+  },
+  headerTag: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: Colors.stone.muted,
+  },
   profilePill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingLeft: 4,
-    paddingRight: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     paddingVertical: 4,
+    paddingHorizontal: 8,
     borderRadius: 99,
-    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(214,211,208,0.7)',
+    borderColor: 'rgba(214, 211, 208, 0.6)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
+    shadowOpacity: 0.04,
+    shadowRadius: 2,
     elevation: 1,
   },
   avatarMini: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     backgroundColor: Colors.coral.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarMiniText: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '700',
     color: Colors.coral.deep,
   },
@@ -221,6 +352,99 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '-2deg' }],
   },
   greetingSub: { fontSize: 12, color: Colors.stone.muted, marginTop: 4 },
+  
+  // State Check-in Section
+  stateSection: {
+    marginBottom: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    borderRadius: 20,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(214, 211, 208, 0.6)',
+  },
+  stateHeader: {
+    marginBottom: 10,
+  },
+  stateTitle: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    color: Colors.stone.muted,
+  },
+  stateSub: {
+    fontSize: 12,
+    color: Colors.stone.body,
+    fontWeight: '500',
+    marginTop: 1,
+  },
+  stateScroll: {
+    gap: 8,
+    paddingBottom: 4,
+  },
+  statePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 99,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: 'rgba(214, 211, 208, 0.7)',
+  },
+  statePillActive: {
+    backgroundColor: Colors.stone.ink,
+    borderColor: Colors.stone.ink,
+  },
+  stateEmoji: {
+    fontSize: 13,
+  },
+  statePillText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: Colors.stone.body,
+  },
+  statePillTextActive: {
+    color: '#FFFFFF',
+  },
+  recBanner: {
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(231, 229, 228, 0.7)',
+    gap: 4,
+  },
+  recHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  recBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(255, 228, 225, 0.6)',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 99,
+  },
+  recBadgeText: {
+    fontSize: 9.5,
+    fontWeight: '700',
+    color: Colors.coral.deep,
+    textTransform: 'uppercase',
+  },
+  recPatternName: {
+    fontSize: 11.5,
+    fontWeight: '600',
+    color: Colors.stone.ink,
+  },
+  recTip: {
+    fontSize: 11,
+    color: Colors.stone.muted,
+    lineHeight: 16,
+  },
+
   patternWrap: { marginBottom: 8 },
   sessionStats: {
     flexDirection: 'row',

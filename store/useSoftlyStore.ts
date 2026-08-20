@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type MoodTag = 'Peaceful' | 'Grounded' | 'Reflective' | 'Restful' | 'Gentle';
 export type BreathePattern = '4-7-8' | 'box' | 'gentle';
+export type UserCurrentState = 'Overwhelmed' | 'Restless' | 'Fatigued' | 'Neutral' | 'Peaceful';
 
 export interface ReflectionEntry {
   id: string;
@@ -28,6 +29,15 @@ export interface UserProfileData {
   windDownTime: string;
 }
 
+export interface NotificationPreferences {
+  morningPebblePrompt: boolean;
+  morningTime: string;
+  unplugReminders: boolean;
+  unplugIntervalMinutes: number;
+  nightWindDown: boolean;
+  nightTime: string;
+}
+
 interface SoftlyState {
   // Onboarding & Profile State
   hasCompletedOnboarding: boolean;
@@ -47,6 +57,10 @@ interface SoftlyState {
   }) => void;
   updateProfile: (data: Partial<UserProfileData>) => void;
   resetOnboarding: () => void;
+
+  // Real-time State Check-in
+  currentState: UserCurrentState;
+  setCurrentState: (state: UserCurrentState) => void;
 
   // Reflections & Diary
   reflections: ReflectionEntry[];
@@ -90,6 +104,10 @@ interface SoftlyState {
   setAmberShiftLevel: (level: number) => void;
   sleepGuardEnabled: boolean;
   toggleSleepGuard: () => void;
+
+  // Notification Preferences
+  notifications: NotificationPreferences;
+  updateNotifications: (prefs: Partial<NotificationPreferences>) => void;
 }
 
 const INITIAL_REFLECTIONS: ReflectionEntry[] = [
@@ -158,6 +176,20 @@ export const useSoftlyStore = create<SoftlyState>()(
           hasCompletedOnboarding: false,
           userName: '',
         }),
+
+      // Current State Check-in
+      currentState: 'Neutral',
+      setCurrentState: (state) => {
+        set({ currentState: state });
+        // Recommend optimal breathing pattern based on current state
+        if (state === 'Overwhelmed') {
+          set({ breathePattern: '4-7-8' });
+        } else if (state === 'Restless') {
+          set({ breathePattern: 'box' });
+        } else {
+          set({ breathePattern: 'gentle' });
+        }
+      },
 
       reflections: INITIAL_REFLECTIONS,
       addReflection: (notes, moodTag = 'Peaceful', quote) => {
@@ -245,6 +277,24 @@ export const useSoftlyStore = create<SoftlyState>()(
       setAmberShiftLevel: (level) => set({ amberShiftLevel: level }),
       sleepGuardEnabled: true,
       toggleSleepGuard: () => set((state) => ({ sleepGuardEnabled: !state.sleepGuardEnabled })),
+
+      // Notification Preferences
+      notifications: {
+        morningPebblePrompt: true,
+        morningTime: '08:30',
+        unplugReminders: true,
+        unplugIntervalMinutes: 60,
+        nightWindDown: true,
+        nightTime: '22:00',
+      },
+      updateNotifications: (prefs) =>
+        set((state) => ({
+          ...state,
+          notifications: {
+            ...state.notifications,
+            ...prefs,
+          },
+        })),
     }),
     {
       name: 'softly-app-storage',

@@ -1,18 +1,72 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Heart, Plus, Volume2, Trash2, Sparkles } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
+import { Heart, Plus, Volume2, Trash2, Sparkles, Search, X, Filter } from 'lucide-react-native';
 import { GrainTexture } from '../../components/ui/GrainTexture';
 import { SoundCard } from '../../components/sounds/SoundCard';
-import { useSoftlyStore } from '../../store/useSoftlyStore';
+import { useSoftlyStore, MoodTag } from '../../store/useSoftlyStore';
 import { useSoundscapes } from '../../hooks/useSoundscapes';
 import { Colors } from '../../theme/colors';
 
+const FILTER_TAGS: { id: string; label: string }[] = [
+  { id: 'all', label: 'All Notes' },
+  { id: 'favorites', label: 'Favorites ❤️' },
+  { id: 'Grounded', label: 'Grounded 🌿' },
+  { id: 'Peaceful', label: 'Peaceful 🕊️' },
+  { id: 'Restful', label: 'Restful 🌙' },
+  { id: 'Reflective', label: 'Reflective 📖' },
+  { id: 'Gentle', label: 'Gentle 🌸' },
+];
+
 export default function ReflectionsScreen() {
   const router = useRouter();
-  const { reflections, streak, toggleFavorite, deleteReflection } = useSoftlyStore();
+  const { reflections, streak, hapticsEnabled, toggleFavorite, deleteReflection } = useSoftlyStore();
   const { tracks, activeSound, isPlayingSound, toggleSound } = useSoundscapes();
+
+  const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const triggerHaptic = () => {
+    if (hapticsEnabled) {
+      try {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      } catch {
+        // ignore
+      }
+    }
+  };
+
+  const handleToggleFav = (id: string) => {
+    triggerHaptic();
+    toggleFavorite(id);
+  };
+
+  const filteredReflections = useMemo(() => {
+    return reflections.filter((entry) => {
+      // Filter logic
+      if (activeFilter === 'favorites' && !entry.isFavorite) return false;
+      if (
+        activeFilter !== 'all' &&
+        activeFilter !== 'favorites' &&
+        entry.moodTag !== activeFilter
+      ) {
+        return false;
+      }
+
+      // Search query logic
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const matchesNotes = entry.userNotes.toLowerCase().includes(q);
+        const matchesQuote = entry.quote ? entry.quote.toLowerCase().includes(q) : false;
+        const matchesMood = entry.moodTag.toLowerCase().includes(q);
+        return matchesNotes || matchesQuote || matchesMood;
+      }
+
+      return true;
+    });
+  }, [reflections, activeFilter, searchQuery]);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -20,6 +74,7 @@ export default function ReflectionsScreen() {
       <ScrollView
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         {/* Header */}
         <View style={styles.header}>
@@ -83,10 +138,16 @@ export default function ReflectionsScreen() {
           ))}
         </View>
 
-        {/* Journal */}
+        {/* Journal Section with Search & Filter */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Your Journal Entries</Text>
+            <View style={styles.journalHeaderLeft}>
+              <Text style={styles.sectionTitle}>Your Journal Entries</Text>
+              <View style={styles.countBadge}>
+                <Text style={styles.countBadgeText}>{filteredReflections.length}</Text>
+              </View>
+            </View>
+
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() => router.push('/modal/new-entry')}
@@ -97,12 +158,67 @@ export default function ReflectionsScreen() {
             </TouchableOpacity>
           </View>
 
-          {reflections.length === 0 ? (
+          {/* Search Input Bar */}
+          <View style={styles.searchBar}>
+            <Search size={14} color={Colors.stone.muted} />
+            <TextInput
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder="Search thoughts, quotes, moods..."
+              placeholderTextColor={Colors.stone.muted}
+              style={styles.searchInput}
+              clearButtonMode="while-editing"
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={() => setSearchQuery('')} activeOpacity={0.7}>
+                <X size={14} color={Colors.stone.muted} />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* Filter Chips Carousel */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filterScroll}
+          >
+            {FILTER_TAGS.map((tag) => {
+              const isSelected = activeFilter === tag.id;
+              return (
+                <TouchableOpacity
+                  key={tag.id}
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    triggerHaptic();
+                    setActiveFilter(tag.id);
+                  }}
+                  style={[styles.filterChip, isSelected && styles.filterChipActive]}
+                >
+                  <Text
+                    style={[
+                      styles.filterChipText,
+                      isSelected && styles.filterChipTextActive,
+                    ]}
+                  >
+                    {tag.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+
+          {/* Reflections List */}
+          {filteredReflections.length === 0 ? (
             <View style={styles.emptyCard}>
-              <Text style={styles.emptyText}>No entries yet. Tap '+ New Entry' to capture a quiet thought.</Text>
+              <Text style={styles.emptyTitle}>No matching notes found</Text>
+              <Text style={styles.emptyText}>
+                {searchQuery || activeFilter !== 'all'
+                  ? 'Try selecting a different filter chip or clearing your search.'
+                  : 'Tap "+ New Entry" above to write your first slow reflection.'}
+              </Text>
             </View>
           ) : (
-            reflections.map((entry) => (
+            filteredReflections.map((entry) => (
               <View key={entry.id} style={styles.entryCard}>
                 {entry.quote && (
                   <View style={styles.entryQuoteRow}>
@@ -117,14 +233,28 @@ export default function ReflectionsScreen() {
                       <Text style={styles.moodPillText}>{entry.moodTag}</Text>
                     </View>
                     <Text style={styles.entryDate}>
-                      {new Date(entry.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                      {new Date(entry.createdAt).toLocaleDateString(undefined, {
+                        month: 'short',
+                        day: 'numeric',
+                      })}
                     </Text>
                   </View>
                   <View style={styles.entryActions}>
-                    <TouchableOpacity onPress={() => toggleFavorite(entry.id)} activeOpacity={0.7}>
-                      <Heart size={15} color={entry.isFavorite ? Colors.coral.accent : Colors.stone.muted} fill={entry.isFavorite ? Colors.coral.accent : 'none'} />
+                    <TouchableOpacity
+                      onPress={() => handleToggleFav(entry.id)}
+                      activeOpacity={0.7}
+                    >
+                      <Heart
+                        size={15}
+                        color={entry.isFavorite ? Colors.coral.accent : Colors.stone.muted}
+                        fill={entry.isFavorite ? Colors.coral.accent : 'none'}
+                      />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => deleteReflection(entry.id)} activeOpacity={0.7} style={{ marginLeft: 12 }}>
+                    <TouchableOpacity
+                      onPress={() => deleteReflection(entry.id)}
+                      activeOpacity={0.7}
+                      style={{ marginLeft: 12 }}
+                    >
                       <Trash2 size={14} color={Colors.stone.light} />
                     </TouchableOpacity>
                   </View>
@@ -160,12 +290,71 @@ const styles = StyleSheet.create({
   section: { marginBottom: 24 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
   sectionHeaderLeft: { flexDirection: 'row', alignItems: 'center' },
+  journalHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  countBadge: {
+    backgroundColor: 'rgba(214, 211, 208, 0.4)',
+    paddingHorizontal: 7,
+    paddingVertical: 1,
+    borderRadius: 99,
+  },
+  countBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: Colors.stone.body,
+  },
   sectionTitle: { fontSize: 14, fontWeight: '600', color: Colors.stone.ink },
   sectionSub: { fontSize: 11, color: Colors.stone.muted },
   newEntryBtn: { flexDirection: 'row', alignItems: 'center' },
   newEntryBtnText: { fontSize: 12, fontWeight: '600', color: Colors.coral.active },
-  emptyCard: { backgroundColor: 'rgba(255,255,255,0.65)', padding: 24, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(214,211,208,0.6)', alignItems: 'center' },
-  emptyText: { fontSize: 12, color: Colors.stone.muted, textAlign: 'center' },
+
+  // Search & Filter
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderWidth: 1,
+    borderColor: 'rgba(214, 211, 208, 0.6)',
+    marginBottom: 10,
+    gap: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 12.5,
+    color: Colors.stone.ink,
+    padding: 0,
+  },
+  filterScroll: {
+    gap: 6,
+    paddingBottom: 12,
+  },
+  filterChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 99,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    borderWidth: 1,
+    borderColor: 'rgba(214, 211, 208, 0.6)',
+  },
+  filterChipActive: {
+    backgroundColor: Colors.stone.ink,
+    borderColor: Colors.stone.ink,
+  },
+  filterChipText: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: Colors.stone.body,
+  },
+  filterChipTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+
+  emptyCard: { backgroundColor: 'rgba(255,255,255,0.7)', padding: 24, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(214,211,208,0.6)', alignItems: 'center', gap: 4 },
+  emptyTitle: { fontSize: 13, fontWeight: '600', color: Colors.stone.ink },
+  emptyText: { fontSize: 11.5, color: Colors.stone.muted, textAlign: 'center', lineHeight: 16 },
   entryCard: { backgroundColor: 'rgba(255,255,255,0.9)', padding: 16, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(214,211,208,0.6)', marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3, elevation: 1 },
   entryQuoteRow: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 8 },
   entryQuoteLine: { width: 2, borderRadius: 1, backgroundColor: Colors.coral.accent, marginRight: 8, alignSelf: 'stretch' },

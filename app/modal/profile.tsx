@@ -26,6 +26,9 @@ import {
   RotateCcw,
   Sparkles,
   ShieldCheck,
+  Bell,
+  Sun,
+  Coffee,
 } from 'lucide-react-native';
 import { Colors } from '../../theme/colors';
 import { GrainTexture } from '../../components/ui/GrainTexture';
@@ -47,6 +50,8 @@ const SOUND_OPTIONS = [
   'Pure Silence',
 ];
 
+const UNPLUG_INTERVALS = [30, 45, 60, 90];
+
 export default function ProfileModal() {
   const router = useRouter();
   const {
@@ -55,10 +60,12 @@ export default function ProfileModal() {
     dailyGoalMinutes,
     preferredSound,
     hapticsEnabled,
+    notifications,
     streak,
     peaceStats,
     reflections,
     updateProfile,
+    updateNotifications,
     setHapticsEnabled,
     resetOnboarding,
   } = useSoftlyStore();
@@ -68,6 +75,12 @@ export default function ProfileModal() {
   const [goal, setGoal] = useState(dailyGoalMinutes || 10);
   const [sound, setSound] = useState(preferredSound || 'Rain on Cedar');
   const [haptics, setHaptics] = useState(hapticsEnabled);
+
+  // Notification states
+  const [morningPebble, setMorningPebble] = useState(notifications?.morningPebblePrompt ?? true);
+  const [unplugActive, setUnplugActive] = useState(notifications?.unplugReminders ?? true);
+  const [unplugInterval, setUnplugInterval] = useState(notifications?.unplugIntervalMinutes ?? 60);
+  const [nightWindDown, setNightWindDown] = useState(notifications?.nightWindDown ?? true);
 
   const triggerHaptic = () => {
     if (haptics) {
@@ -85,6 +98,12 @@ export default function ProfileModal() {
       userIntention: intention,
       dailyGoalMinutes: goal,
       preferredSound: sound === 'Pure Silence' ? '' : sound,
+    });
+    updateNotifications({
+      morningPebblePrompt: morningPebble,
+      unplugReminders: unplugActive,
+      unplugIntervalMinutes: unplugInterval,
+      nightWindDown: nightWindDown,
     });
     setHapticsEnabled(haptics);
     if (haptics) {
@@ -269,7 +288,7 @@ export default function ProfileModal() {
           </View>
         </View>
 
-        {/* Soundscape Selector */}
+        {/* Default Soundscape */}
         <View style={styles.section}>
           <View style={styles.sectionHeaderRow}>
             <Volume2 size={14} color={Colors.stone.body} />
@@ -306,14 +325,134 @@ export default function ProfileModal() {
           </View>
         </View>
 
-        {/* Preferences Toggle */}
+        {/* ============================================================ */}
+        {/* GENTLE NOTIFICATIONS & QUIET REMINDERS                       */}
+        {/* ============================================================ */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>PREFERENCES</Text>
+          <View style={styles.sectionHeaderRow}>
+            <Bell size={14} color={Colors.coral.deep} />
+            <Text style={styles.sectionTitle}>QUIET NOTIFICATIONS</Text>
+          </View>
+
+          <View style={styles.notifCard}>
+            {/* Morning Pebble Prompt */}
+            <View style={styles.notifRow}>
+              <View style={styles.notifInfo}>
+                <View style={styles.notifLabelRow}>
+                  <Sun size={13} color={Colors.stone.body} />
+                  <Text style={styles.notifTitle}>Morning Pebble Prompt</Text>
+                </View>
+                <Text style={styles.notifDesc}>
+                  Daily grounding thought at 8:30 AM (Silent)
+                </Text>
+              </View>
+              <Switch
+                value={morningPebble}
+                onValueChange={(val) => {
+                  triggerHaptic();
+                  setMorningPebble(val);
+                }}
+                trackColor={{ false: '#E7E5E4', true: Colors.stone.ink }}
+                thumbColor="#FFFFFF"
+              />
+            </View>
+
+            <View style={styles.divider} />
+
+            {/* Unplug Windows */}
+            <View style={styles.notifRow}>
+              <View style={styles.notifInfo}>
+                <View style={styles.notifLabelRow}>
+                  <Coffee size={13} color={Colors.stone.body} />
+                  <Text style={styles.notifTitle}>Unplug Screen Breaks</Text>
+                </View>
+                <Text style={styles.notifDesc}>
+                  Gentle invitation to step away from screens
+                </Text>
+              </View>
+              <Switch
+                value={unplugActive}
+                onValueChange={(val) => {
+                  triggerHaptic();
+                  setUnplugActive(val);
+                }}
+                trackColor={{ false: '#E7E5E4', true: Colors.stone.ink }}
+                thumbColor="#FFFFFF"
+              />
+            </View>
+
+            {unplugActive && (
+              <View style={styles.intervalRow}>
+                <Text style={styles.intervalLabel}>Interval:</Text>
+                <View style={styles.intervalChips}>
+                  {UNPLUG_INTERVALS.map((mins) => (
+                    <TouchableOpacity
+                      key={mins}
+                      onPress={() => {
+                        triggerHaptic();
+                        setUnplugInterval(mins);
+                      }}
+                      style={[
+                        styles.intervalChip,
+                        unplugInterval === mins && styles.intervalChipActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.intervalChipText,
+                          unplugInterval === mins && styles.intervalChipTextActive,
+                        ]}
+                      >
+                        {mins}m
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            <View style={styles.divider} />
+
+            {/* Night Wind-down */}
+            <View style={styles.notifRow}>
+              <View style={styles.notifInfo}>
+                <View style={styles.notifLabelRow}>
+                  <Moon size={13} color={Colors.stone.body} />
+                  <Text style={styles.notifTitle}>Night Sanctuary Wind-Down</Text>
+                </View>
+                <Text style={styles.notifDesc}>
+                  Reminder to engage amber warmth at 10:00 PM
+                </Text>
+              </View>
+              <Switch
+                value={nightWindDown}
+                onValueChange={(val) => {
+                  triggerHaptic();
+                  setNightWindDown(val);
+                }}
+                trackColor={{ false: '#E7E5E4', true: Colors.stone.ink }}
+                thumbColor="#FFFFFF"
+              />
+            </View>
+
+            {/* Quiet Pledge */}
+            <View style={styles.pledgeRow}>
+              <ShieldCheck size={12} color={Colors.sage.deep} />
+              <Text style={styles.pledgeText}>
+                No urgency sounds or red badges. Ever.
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Tactile Haptics Toggle */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>TACTILE EXPERIENCE</Text>
           <View style={styles.toggleCard}>
             <View style={styles.toggleInfo}>
-              <Text style={styles.toggleTitle}>Tactile Haptic Feedback</Text>
+              <Text style={styles.toggleTitle}>Haptic Touch Feedback</Text>
               <Text style={styles.toggleDesc}>
-                Gentle vibrations during breathing and interaction
+                Subtle vibrations during breathing rhythm and interactions
               </Text>
             </View>
             <Switch
@@ -589,6 +728,91 @@ const styles = StyleSheet.create({
     color: Colors.stone.ink,
     fontWeight: '600',
   },
+
+  // Notification Card
+  notifCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    borderRadius: 18,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(214, 211, 208, 0.6)',
+    gap: 12,
+  },
+  notifRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  notifInfo: {
+    flex: 1,
+    marginRight: 12,
+  },
+  notifLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 2,
+  },
+  notifTitle: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: Colors.stone.ink,
+  },
+  notifDesc: {
+    fontSize: 11,
+    color: Colors.stone.muted,
+  },
+  intervalRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 4,
+  },
+  intervalLabel: {
+    fontSize: 11.5,
+    color: Colors.stone.body,
+    fontWeight: '500',
+  },
+  intervalChips: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  intervalChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 99,
+    backgroundColor: 'rgba(214, 211, 208, 0.3)',
+  },
+  intervalChipActive: {
+    backgroundColor: Colors.stone.ink,
+  },
+  intervalChipText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: Colors.stone.body,
+  },
+  intervalChipTextActive: {
+    color: '#FFFFFF',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: 'rgba(231, 229, 228, 0.7)',
+  },
+  pledgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: Colors.sage.background,
+    padding: 8,
+    borderRadius: 12,
+    marginTop: 4,
+  },
+  pledgeText: {
+    fontSize: 10.5,
+    color: Colors.stone.body,
+    fontWeight: '500',
+  },
+
   toggleCard: {
     flexDirection: 'row',
     alignItems: 'center',
