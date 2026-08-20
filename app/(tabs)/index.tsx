@@ -2,56 +2,20 @@ import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import * as Haptics from 'expo-haptics';
-import { Volume2, Coffee, Play, Pause, Sparkles, Activity, ArrowRight, Heart } from 'lucide-react-native';
+import { Volume2, Coffee, Play, Pause, Sparkles } from 'lucide-react-native';
 import { BreathingCircle } from '../../components/breathe/BreathingCircle';
 import { PatternSelector } from '../../components/breathe/PatternSelector';
 import { GrainTexture } from '../../components/ui/GrainTexture';
 import { useBreatheEngine } from '../../hooks/useBreatheEngine';
-import { useSoftlyStore, UserCurrentState } from '../../store/useSoftlyStore';
+import { useSoftlyStore } from '../../store/useSoftlyStore';
 import { useSoundscapes } from '../../hooks/useSoundscapes';
 import { Colors } from '../../theme/colors';
-
-const STATES: { id: UserCurrentState; emoji: string; label: string; tip: string; pattern: string }[] = [
-  {
-    id: 'Overwhelmed',
-    emoji: '🌪️',
-    label: 'Overwhelmed',
-    tip: 'Deep 4-7-8 exhalations engage your parasympathetic nervous system to quickly diffuse stress.',
-    pattern: '4-7-8 Relax',
-  },
-  {
-    id: 'Restless',
-    emoji: '🌊',
-    label: 'Restless',
-    tip: 'Equal 4-second box cycles stabilize heart-rate variability and restore deep cognitive clarity.',
-    pattern: 'Box Focus',
-  },
-  {
-    id: 'Fatigued',
-    emoji: '☁️',
-    label: 'Fatigued',
-    tip: 'Gentle 3-second natural flow gently oxygenates your brain without taxing your body.',
-    pattern: 'Gentle 3-3',
-  },
-  {
-    id: 'Peaceful',
-    emoji: '🌿',
-    label: 'Peaceful',
-    tip: 'Sustaining a gentle breath rhythm preserves your quiet equilibrium throughout the day.',
-    pattern: 'Gentle 3-3',
-  },
-];
 
 export default function QuietRoomScreen() {
   const router = useRouter();
   const {
     userName,
     userIntention,
-    currentState,
-    setCurrentState,
-    breathePattern,
-    hapticsEnabled,
     unplugRemainingMinutes,
     isUnplugActive,
     toggleUnplug,
@@ -67,19 +31,6 @@ export default function QuietRoomScreen() {
   };
 
   const initialLetter = (userName?.trim() || 'S')[0].toUpperCase();
-
-  const handleSelectState = (state: UserCurrentState) => {
-    if (hapticsEnabled) {
-      try {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      } catch {
-        // ignore
-      }
-    }
-    setCurrentState(state);
-  };
-
-  const activeStateInfo = STATES.find((s) => s.id === currentState) || STATES[0];
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -107,7 +58,7 @@ export default function QuietRoomScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Greeting */}
+        {/* Greeting with Reenie Beanie Cursive Name */}
         <View style={styles.greeting}>
           <View style={styles.intentionRow}>
             <Sparkles size={11} color={Colors.coral.deep} />
@@ -120,67 +71,14 @@ export default function QuietRoomScreen() {
           <Text style={styles.greetingSub}>Your space is calm and ready.</Text>
         </View>
 
-        {/* State Check-in Carousel (only when idle) */}
-        {!breathe.isActive && (
-          <View style={styles.stateSection}>
-            <View style={styles.stateHeader}>
-              <Text style={styles.stateTitle}>STATE CHECK-IN</Text>
-              <Text style={styles.stateSub}>How is your mind feeling right now?</Text>
-            </View>
-
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.stateScroll}
-            >
-              {STATES.map((s) => {
-                const isSelected = currentState === s.id;
-                return (
-                  <TouchableOpacity
-                    key={s.id}
-                    activeOpacity={0.7}
-                    onPress={() => handleSelectState(s.id)}
-                    style={[
-                      styles.statePill,
-                      isSelected && styles.statePillActive,
-                    ]}
-                  >
-                    <Text style={styles.stateEmoji}>{s.emoji}</Text>
-                    <Text
-                      style={[
-                        styles.statePillText,
-                        isSelected && styles.statePillTextActive,
-                      ]}
-                    >
-                      {s.label}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-
-            {/* Dynamic Recommendation Banner */}
-            <View style={styles.recBanner}>
-              <View style={styles.recHeader}>
-                <View style={styles.recBadge}>
-                  <Sparkles size={10} color={Colors.coral.deep} />
-                  <Text style={styles.recBadgeText}>Recommended</Text>
-                </View>
-                <Text style={styles.recPatternName}>{activeStateInfo.pattern}</Text>
-              </View>
-              <Text style={styles.recTip}>{activeStateInfo.tip}</Text>
-            </View>
-          </View>
-        )}
-
-        {/* Pattern selector (only when idle) */}
+        {/* Unified Mindful Pattern Selector (only when idle) */}
         {!breathe.isActive && (
           <View style={styles.patternWrap}>
             <PatternSelector />
           </View>
         )}
 
-        {/* Breathing circle */}
+        {/* Breathing Circle Hero Centerpiece */}
         <BreathingCircle
           phase={breathe.currentPhase}
           phaseSecondsRemaining={breathe.phaseSecondsRemaining}
@@ -192,7 +90,7 @@ export default function QuietRoomScreen() {
           }}
         />
 
-        {/* Live session stats */}
+        {/* Live session stats (when active) */}
         {breathe.isActive && (
           <View style={styles.sessionStats}>
             <View style={styles.stat}>
@@ -264,12 +162,12 @@ export default function QuietRoomScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.cream.canvas },
-  scroll: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 110 },
+  scroll: { paddingHorizontal: 20, paddingTop: 6, paddingBottom: 110 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   headerLeft: {
     flexDirection: 'row',
@@ -323,151 +221,61 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.stone.ink,
   },
-  greeting: { marginBottom: 16 },
+  greeting: { marginBottom: 12 },
   intentionRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
     marginBottom: 2,
   },
-  greetingTag: { fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase', color: Colors.stone.muted },
+  greetingTag: { fontSize: 10.5, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase', color: Colors.stone.muted },
   greetingTitleRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
     flexWrap: 'wrap',
-    marginTop: 2,
+    marginTop: 1,
   },
   greetingText: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '300',
     color: Colors.stone.ink,
   },
   greetingName: {
     fontFamily: 'ReenieBeanie_400Regular',
-    fontSize: 40,
+    fontSize: 38,
     color: '#e8908a',
     fontWeight: 'normal',
     fontStyle: 'normal',
-    lineHeight: 40,
+    lineHeight: 38,
     transform: [{ rotate: '-2deg' }],
   },
-  greetingSub: { fontSize: 12, color: Colors.stone.muted, marginTop: 4 },
+  greetingSub: { fontSize: 12, color: Colors.stone.muted, marginTop: 2 },
   
-  // State Check-in Section
-  stateSection: {
-    marginBottom: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
-    borderRadius: 20,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.6)',
-  },
-  stateHeader: {
-    marginBottom: 10,
-  },
-  stateTitle: {
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 0.8,
-    color: Colors.stone.muted,
-  },
-  stateSub: {
-    fontSize: 12,
-    color: Colors.stone.body,
-    fontWeight: '500',
-    marginTop: 1,
-  },
-  stateScroll: {
-    gap: 8,
-    paddingBottom: 4,
-  },
-  statePill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: 99,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.7)',
-  },
-  statePillActive: {
-    backgroundColor: Colors.stone.ink,
-    borderColor: Colors.stone.ink,
-  },
-  stateEmoji: {
-    fontSize: 13,
-  },
-  statePillText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: Colors.stone.body,
-  },
-  statePillTextActive: {
-    color: '#FFFFFF',
-  },
-  recBanner: {
-    marginTop: 10,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(231, 229, 228, 0.7)',
-    gap: 4,
-  },
-  recHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  recBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(255, 228, 225, 0.6)',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 99,
-  },
-  recBadgeText: {
-    fontSize: 9.5,
-    fontWeight: '700',
-    color: Colors.coral.deep,
-    textTransform: 'uppercase',
-  },
-  recPatternName: {
-    fontSize: 11.5,
-    fontWeight: '600',
-    color: Colors.stone.ink,
-  },
-  recTip: {
-    fontSize: 11,
-    color: Colors.stone.muted,
-    lineHeight: 16,
-  },
-
-  patternWrap: { marginBottom: 8 },
+  patternWrap: { marginBottom: 4 },
+  
   sessionStats: {
     flexDirection: 'row',
     backgroundColor: 'rgba(255,228,225,0.5)',
     borderRadius: 18,
-    padding: 14,
+    padding: 12,
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginBottom: 16,
+    marginBottom: 14,
     borderWidth: 1,
     borderColor: 'rgba(255,183,178,0.4)',
   },
   stat: { alignItems: 'center' },
   statLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 0.8, color: Colors.stone.muted },
-  statValue: { fontSize: 16, fontWeight: '600', color: Colors.stone.ink, marginTop: 2 },
-  statDivider: { width: 1, height: 24, backgroundColor: 'rgba(214,211,208,0.6)' },
+  statValue: { fontSize: 15, fontWeight: '600', color: Colors.stone.ink, marginTop: 2 },
+  statDivider: { width: 1, height: 22, backgroundColor: 'rgba(214,211,208,0.6)' },
+  
   audioCard: {
     flexDirection: 'row', alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.85)',
-    borderRadius: 18, padding: 14,
+    borderRadius: 18, padding: 13,
     marginBottom: 10,
     borderWidth: 1, borderColor: 'rgba(214,211,208,0.6)',
-    shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3, elevation: 1,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 3, elevation: 1,
     gap: 12,
   },
   audioIcon: { width: 36, height: 36, borderRadius: 10, backgroundColor: '#F3F2F0', alignItems: 'center', justifyContent: 'center' },
@@ -477,10 +285,11 @@ const styles = StyleSheet.create({
   audioSub: { fontSize: 10, color: Colors.stone.muted, marginTop: 1 },
   audioBtn: { width: 28, height: 28, borderRadius: 14, backgroundColor: 'rgba(168,162,158,0.3)', alignItems: 'center', justifyContent: 'center' },
   audioBtnActive: { backgroundColor: Colors.coral.accent },
+  
   unplugCard: {
     flexDirection: 'row', alignItems: 'center',
     backgroundColor: '#F9F8F5',
-    borderRadius: 18, padding: 14,
+    borderRadius: 18, padding: 13,
     borderWidth: 1, borderColor: 'rgba(214,211,208,0.6)',
     gap: 12,
   },
