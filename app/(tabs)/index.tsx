@@ -47,7 +47,7 @@ export default function QuietRoomScreen() {
           </View>
 
           <TouchableOpacity
-            activeOpacity={0.7}
+            activeOpacity={0.75}
             onPress={() => router.push('/modal/profile')}
             style={styles.profilePill}
           >
@@ -58,25 +58,40 @@ export default function QuietRoomScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Greeting with Reenie Beanie Cursive Name */}
+        {/* Cohesive Editorial Greeting */}
         <View style={styles.greeting}>
           <View style={styles.intentionRow}>
             <Sparkles size={11} color={Colors.coral.deep} />
-            <Text style={styles.greetingTag}>{userIntention || 'Living Room'}</Text>
+            <Text style={styles.greetingTag}>{userIntention || 'Stillness & Stress Relief'}</Text>
           </View>
           <View style={styles.greetingTitleRow}>
-            <Text style={styles.greetingText}>{getGreeting()},{' '}</Text>
+            <Text style={styles.greetingText}>{getGreeting()}, </Text>
             <Text style={styles.greetingName}>{userName || 'Friend'}</Text>
           </View>
           <Text style={styles.greetingSub}>Your space is calm and ready.</Text>
         </View>
 
-        {/* Unified Mindful Pattern Selector (only when idle) */}
-        {!breathe.isActive && (
-          <View style={styles.patternWrap}>
+        {/* Pattern Selector / Live Stats Dock */}
+        <View style={styles.topControlWrap}>
+          {!breathe.isActive ? (
             <PatternSelector />
-          </View>
-        )}
+          ) : (
+            <View style={styles.sessionStats}>
+              <View style={styles.stat}>
+                <Text style={styles.statLabel}>CYCLES</Text>
+                <Text style={styles.statValue}>{breathe.completedCycles}</Text>
+              </View>
+              <View style={styles.statDivider} />
+              <View style={styles.stat}>
+                <Text style={styles.statLabel}>ELAPSED</Text>
+                <Text style={styles.statValue}>
+                  {Math.floor(breathe.totalSecondsElapsed / 60)}:
+                  {String(breathe.totalSecondsElapsed % 60).padStart(2, '0')}
+                </Text>
+              </View>
+            </View>
+          )}
+        </View>
 
         {/* Breathing Circle Hero Centerpiece */}
         <BreathingCircle
@@ -90,24 +105,6 @@ export default function QuietRoomScreen() {
           }}
         />
 
-        {/* Live session stats (when active) */}
-        {breathe.isActive && (
-          <View style={styles.sessionStats}>
-            <View style={styles.stat}>
-              <Text style={styles.statLabel}>CYCLES</Text>
-              <Text style={styles.statValue}>{breathe.completedCycles}</Text>
-            </View>
-            <View style={styles.statDivider} />
-            <View style={styles.stat}>
-              <Text style={styles.statLabel}>ELAPSED</Text>
-              <Text style={styles.statValue}>
-                {Math.floor(breathe.totalSecondsElapsed / 60)}:
-                {String(breathe.totalSecondsElapsed % 60).padStart(2, '0')}
-              </Text>
-            </View>
-          </View>
-        )}
-
         {/* Ambient quick player */}
         <TouchableOpacity
           activeOpacity={0.8}
@@ -115,19 +112,19 @@ export default function QuietRoomScreen() {
           style={styles.audioCard}
         >
           <View style={[styles.audioIcon, isPlayingSound && styles.audioIconActive]}>
-            <Volume2 size={16} color={isPlayingSound ? Colors.coral.active : Colors.stone.body} />
+            <Volume2 size={16} color={isPlayingSound ? Colors.coral.deep : Colors.stone.body} strokeWidth={2.2} />
           </View>
           <View style={styles.audioInfo}>
             <Text style={styles.audioName}>{activeSound || 'Rain on Cedar'}</Text>
             <Text style={styles.audioSub}>
-              {isPlayingSound ? 'Playing in background' : 'Tap to play ambient sound'}
+              {isPlayingSound ? 'Playing soothing ambient sound' : 'Tap to play ambient sound'}
             </Text>
           </View>
           <View style={[styles.audioBtn, isPlayingSound && styles.audioBtnActive]}>
             {isPlayingSound ? (
-              <Pause size={13} color={Colors.stone.ink} />
+              <Pause size={13} color="#FFFFFF" strokeWidth={2.4} />
             ) : (
-              <Play size={13} color={Colors.stone.ink} style={{ marginLeft: 2 }} />
+              <Play size={13} color={Colors.stone.ink} strokeWidth={2.4} style={{ marginLeft: 2 }} />
             )}
           </View>
         </TouchableOpacity>
@@ -139,7 +136,7 @@ export default function QuietRoomScreen() {
           style={styles.unplugCard}
         >
           <View style={styles.unplugIcon}>
-            <Coffee size={16} color={Colors.sage.deep} />
+            <Coffee size={16} color={Colors.sage.deep} strokeWidth={2.2} />
           </View>
           <View style={styles.unplugInfo}>
             <Text style={styles.unplugTitle}>Unplug Window</Text>
@@ -162,12 +159,12 @@ export default function QuietRoomScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.cream.canvas },
-  scroll: { paddingHorizontal: 20, paddingTop: 6, paddingBottom: 110 },
+  scroll: { paddingHorizontal: 20, paddingTop: 4, paddingBottom: 110 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   headerLeft: {
     flexDirection: 'row',
@@ -191,13 +188,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: '#FFFFFF',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 99,
     borderWidth: 1,
-    borderColor: 'rgba(214, 211, 208, 0.6)',
-    shadowColor: '#000',
+    borderColor: '#E2DFDA',
+    shadowColor: '#1C1917',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.04,
     shadowRadius: 2,
@@ -218,7 +215,7 @@ const styles = StyleSheet.create({
   },
   profilePillText: {
     fontSize: 11.5,
-    fontWeight: '600',
+    fontWeight: '700',
     color: Colors.stone.ink,
   },
   greeting: { marginBottom: 12 },
@@ -228,77 +225,162 @@ const styles = StyleSheet.create({
     gap: 4,
     marginBottom: 2,
   },
-  greetingTag: { fontSize: 10.5, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase', color: Colors.stone.muted },
+  greetingTag: {
+    fontSize: 10.5,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: Colors.stone.muted,
+  },
   greetingTitleRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
     flexWrap: 'wrap',
-    marginTop: 1,
+    marginTop: 2,
   },
   greetingText: {
-    fontSize: 26,
+    fontSize: 27,
     fontWeight: '300',
     color: Colors.stone.ink,
+    letterSpacing: -0.4,
   },
   greetingName: {
-    fontFamily: 'ReenieBeanie_400Regular',
-    fontSize: 38,
-    color: '#e8908a',
-    fontWeight: 'normal',
-    fontStyle: 'normal',
-    lineHeight: 38,
-    transform: [{ rotate: '-2deg' }],
+    fontSize: 27,
+    fontWeight: '500',
+    color: Colors.coral.deep,
+    letterSpacing: -0.4,
   },
-  greetingSub: { fontSize: 12, color: Colors.stone.muted, marginTop: 2 },
+  greetingSub: {
+    fontSize: 12.5,
+    color: Colors.stone.muted,
+    marginTop: 3,
+    fontWeight: '500',
+  },
   
-  patternWrap: { marginBottom: 4 },
-  
+  topControlWrap: {
+    minHeight: 52,
+    justifyContent: 'center',
+  },
   sessionStats: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255,228,225,0.5)',
+    backgroundColor: Colors.coral.background,
     borderRadius: 18,
-    padding: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginBottom: 14,
     borderWidth: 1,
-    borderColor: 'rgba(255,183,178,0.4)',
+    borderColor: Colors.coral.accent,
   },
   stat: { alignItems: 'center' },
-  statLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 0.8, color: Colors.stone.muted },
-  statValue: { fontSize: 15, fontWeight: '600', color: Colors.stone.ink, marginTop: 2 },
-  statDivider: { width: 1, height: 22, backgroundColor: 'rgba(214,211,208,0.6)' },
+  statLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 0.8, color: Colors.coral.deep },
+  statValue: { fontSize: 16, fontWeight: '700', color: Colors.stone.ink, marginTop: 1 },
+  statDivider: { width: 1, height: 20, backgroundColor: Colors.coral.accent },
   
   audioCard: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.85)',
-    borderRadius: 18, padding: 13,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 14,
     marginBottom: 10,
-    borderWidth: 1, borderColor: 'rgba(214,211,208,0.6)',
-    shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 3, elevation: 1,
+    borderWidth: 1,
+    borderColor: '#E2DFDA',
+    shadowColor: '#1C1917',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 2,
     gap: 12,
   },
-  audioIcon: { width: 36, height: 36, borderRadius: 10, backgroundColor: '#F3F2F0', alignItems: 'center', justifyContent: 'center' },
-  audioIconActive: { backgroundColor: Colors.coral.background },
+  audioIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: '#F4F2EE',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  audioIconActive: {
+    backgroundColor: Colors.coral.background,
+  },
   audioInfo: { flex: 1 },
-  audioName: { fontSize: 12, fontWeight: '600', color: Colors.stone.ink },
-  audioSub: { fontSize: 10, color: Colors.stone.muted, marginTop: 1 },
-  audioBtn: { width: 28, height: 28, borderRadius: 14, backgroundColor: 'rgba(168,162,158,0.3)', alignItems: 'center', justifyContent: 'center' },
-  audioBtnActive: { backgroundColor: Colors.coral.accent },
+  audioName: {
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: Colors.stone.ink,
+  },
+  audioSub: {
+    fontSize: 11,
+    color: Colors.stone.muted,
+    marginTop: 1,
+    fontWeight: '500',
+  },
+  audioBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F0EEEA',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  audioBtnActive: {
+    backgroundColor: Colors.coral.deep,
+  },
   
   unplugCard: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#F9F8F5',
-    borderRadius: 18, padding: 13,
-    borderWidth: 1, borderColor: 'rgba(214,211,208,0.6)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#E2DFDA',
+    shadowColor: '#1C1917',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 3,
+    elevation: 1,
     gap: 12,
   },
-  unplugIcon: { width: 36, height: 36, borderRadius: 10, backgroundColor: Colors.sage.background, alignItems: 'center', justifyContent: 'center' },
+  unplugIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: Colors.sage.background,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   unplugInfo: { flex: 1 },
-  unplugTitle: { fontSize: 12, fontWeight: '600', color: Colors.stone.ink },
-  unplugSub: { fontSize: 10, color: Colors.stone.muted, marginTop: 1 },
-  unplugBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 99, backgroundColor: 'rgba(168,162,158,0.2)' },
-  unplugBadgeActive: { backgroundColor: Colors.sage.background },
-  unplugBadgeText: { fontSize: 11, fontWeight: '600', color: Colors.stone.muted },
-  unplugBadgeTextActive: { color: Colors.stone.ink },
+  unplugTitle: {
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: Colors.stone.ink,
+  },
+  unplugSub: {
+    fontSize: 11,
+    color: Colors.stone.muted,
+    marginTop: 1,
+    fontWeight: '500',
+  },
+  unplugBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 99,
+    backgroundColor: '#F0EEEA',
+  },
+  unplugBadgeActive: {
+    backgroundColor: Colors.sage.background,
+    borderWidth: 1,
+    borderColor: '#DCE8DC',
+  },
+  unplugBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: Colors.stone.muted,
+  },
+  unplugBadgeTextActive: {
+    color: Colors.sage.deep,
+    fontWeight: '700',
+  },
 });
