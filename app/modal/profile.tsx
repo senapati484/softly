@@ -41,7 +41,7 @@ const INTENTIONS = [
   'Restful Sleep',
 ];
 
-const DAILY_GOALS = [5, 10, 15, 20];
+const DAILY_GOALS = [3, 5, 10, 15, 20, 30];
 
 const SOUND_OPTIONS = [
   'Rain on Cedar',
@@ -50,9 +50,36 @@ const SOUND_OPTIONS = [
   'Pure Silence',
 ];
 
-const MORNING_TIMES = ['7:00 AM', '7:30 AM', '8:00 AM', '8:30 AM', '9:00 AM'];
-const UNPLUG_INTERVALS = [30, 45, 60, 90];
-const NIGHT_TIMES = ['9:30 PM', '10:00 PM', '10:30 PM', '11:00 PM'];
+const MORNING_TIMES = [
+  '5:30 AM',
+  '6:00 AM',
+  '6:30 AM',
+  '7:00 AM',
+  '7:30 AM',
+  '8:00 AM',
+  '8:30 AM',
+  '9:00 AM',
+  '9:30 AM',
+  '10:00 AM',
+  '10:30 AM',
+  '11:00 AM',
+];
+
+const UNPLUG_INTERVALS = [20, 30, 45, 60, 90, 120];
+
+const NIGHT_TIMES = [
+  '8:00 PM',
+  '8:30 PM',
+  '9:00 PM',
+  '9:30 PM',
+  '10:00 PM',
+  '10:30 PM',
+  '11:00 PM',
+  '11:30 PM',
+  '12:00 AM',
+  '12:30 AM',
+  '1:00 AM',
+];
 
 export default function ProfileModal() {
   const router = useRouter();
@@ -421,7 +448,7 @@ export default function ProfileModal() {
             {unplugActive && (
               <View style={styles.timeSelectorRow}>
                 <Text style={styles.timeSelectorLabel}>Pause interval:</Text>
-                <View style={styles.timeChips}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.timeChips}>
                   {UNPLUG_INTERVALS.map((mins) => (
                     <TouchableOpacity
                       key={mins}
@@ -444,7 +471,7 @@ export default function ProfileModal() {
                       </Text>
                     </TouchableOpacity>
                   ))}
-                </View>
+                </ScrollView>
               </View>
             )}
 
