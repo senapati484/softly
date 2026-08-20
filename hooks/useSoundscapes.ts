@@ -19,7 +19,7 @@ export const SOUNDSCAPE_TRACKS: SoundscapeTrack[] = [
     description: 'Gentle raindrops falling on wooden shingles and soft earth.',
     mood: 'Restful',
     color: '#EDF4ED',
-    source: require('../assets/sounds/rain.wav'),
+    source: require('../assets/sounds/rain.mp3'),
   },
   {
     id: 'forest',
@@ -27,7 +27,7 @@ export const SOUNDSCAPE_TRACKS: SoundscapeTrack[] = [
     description: 'Pine needles rustling in a cool mountain breeze.',
     mood: 'Clarity',
     color: '#F4F8F4',
-    source: require('../assets/sounds/forest.wav'),
+    source: require('../assets/sounds/forest.mp3'),
   },
   {
     id: 'library',
@@ -35,7 +35,7 @@ export const SOUNDSCAPE_TRACKS: SoundscapeTrack[] = [
     description: 'Warm acoustics, gentle room resonance, and deep focus.',
     mood: 'Focus',
     color: '#F2EFF8',
-    source: require('../assets/sounds/library.wav'),
+    source: require('../assets/sounds/library.mp3'),
   },
 ];
 
@@ -94,14 +94,14 @@ export function useSoundscapes() {
 
         const track = SOUNDSCAPE_TRACKS.find((t) => t.name === trackName) || SOUNDSCAPE_TRACKS[0];
 
-        // Ensure asset is downloaded and local on physical device storage
+        // Ensure asset is preloaded
         try {
           const asset = Asset.fromModule(track.source);
           if (!asset.downloaded) {
             await asset.downloadAsync();
           }
         } catch {
-          // fallback to raw source if asset download is not needed
+          // ignore
         }
 
         const { sound } = await Audio.Sound.createAsync(

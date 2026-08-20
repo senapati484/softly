@@ -2,6 +2,7 @@
 
 # Audio and Media3 / ExoPlayer (CRITICAL FOR EXPO-AV SOUND PLAYBACK)
 -keep class expo.modules.av.** { *; }
+-keep class expo.modules.notifications.** { *; }
 -keep class com.google.android.exoplayer2.** { *; }
 -keep class androidx.media3.** { *; }
 -keep class android.media.** { *; }

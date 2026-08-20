@@ -13,12 +13,12 @@ import {
 import { Colors } from '../theme/colors';
 import { useSoftlyStore } from '../store/useSoftlyStore';
 import { AnimatedSplashScreen } from '../components/ui/AnimatedSplashScreen';
-import { setupNotificationChannel } from '../services/notificationService';
+import { setupNotificationChannel, requestNotificationPermissionAndWelcome } from '../services/notificationService';
 
 export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
-  const { hasCompletedOnboarding } = useSoftlyStore();
+  const { hasCompletedOnboarding, userName } = useSoftlyStore();
   const [isSplashComplete, setIsSplashComplete] = useState(false);
 
   const [fontsLoaded] = useFonts({
@@ -31,7 +31,10 @@ export default function RootLayout() {
 
   useEffect(() => {
     setupNotificationChannel();
-  }, []);
+    if (hasCompletedOnboarding) {
+      requestNotificationPermissionAndWelcome(userName || 'Friend');
+    }
+  }, [hasCompletedOnboarding, userName]);
 
   useEffect(() => {
     if (fontsLoaded && isSplashComplete) {
