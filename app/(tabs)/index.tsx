@@ -201,8 +201,12 @@ const styles = StyleSheet.create({
   },
   greetingTag: { fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase', color: Colors.stone.muted },
   greetingText: { fontSize: 28, fontWeight: '300', color: Colors.stone.ink, marginTop: 2 },
-  greetingName: { fontSize: 28, color: Colors.coral.active, fontStyle: 'italic' },
-  greetingSub: { fontSize: 12, color: Colors.stone.muted, marginTop: 4 },
+  greetingName: {
+    fontFamily: 'ReenieBeanie_400Regular',
+    fontSize: 38,
+    color: '#e8908a',
+  },
+  greetingSub: { fontSize: 12, color: Colors.stone.muted, marginTop: 2 },
   patternWrap: { marginBottom: 8 },
   sessionStats: {
     flexDirection: 'row',

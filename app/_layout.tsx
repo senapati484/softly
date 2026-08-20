@@ -3,6 +3,13 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useFonts, ReenieBeanie_400Regular } from '@expo-google-fonts/reenie-beanie';
+import {
+  Outfit_300Light,
+  Outfit_400Regular,
+  Outfit_500Medium,
+  Outfit_600SemiBold,
+} from '@expo-google-fonts/outfit';
 import { Colors } from '../theme/colors';
 import { useSoftlyStore } from '../store/useSoftlyStore';
 
@@ -11,12 +18,24 @@ export default function RootLayout() {
   const segments = useSegments();
   const { hasCompletedOnboarding } = useSoftlyStore();
 
+  const [fontsLoaded] = useFonts({
+    ReenieBeanie_400Regular,
+    Outfit_300Light,
+    Outfit_400Regular,
+    Outfit_500Medium,
+    Outfit_600SemiBold,
+  });
+
   useEffect(() => {
     const inOnboarding = segments[0] === 'onboarding';
     if (!hasCompletedOnboarding && !inOnboarding) {
       router.replace('/onboarding');
     }
   }, [hasCompletedOnboarding, segments]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: Colors.cream.canvas }}>
