@@ -14,6 +14,7 @@ import { Colors } from '../theme/colors';
 import { useSoftlyStore } from '../store/useSoftlyStore';
 import { AnimatedSplashScreen } from '../components/ui/AnimatedSplashScreen';
 import { setupNotificationChannel, requestNotificationPermissionAndWelcome } from '../services/notificationService';
+import { Asset } from 'expo-asset';
 
 export default function RootLayout() {
   const router = useRouter();
@@ -34,6 +35,12 @@ export default function RootLayout() {
     if (hasCompletedOnboarding) {
       requestNotificationPermissionAndWelcome(userName || 'Friend');
     }
+    // Pre-cache ambient sound assets onto the physical device storage
+    Asset.loadAsync([
+      require('../assets/sounds/rain.mp3'),
+      require('../assets/sounds/forest.mp3'),
+      require('../assets/sounds/library.mp3'),
+    ]).catch((err) => console.warn('Sound asset preloading note:', err));
   }, [hasCompletedOnboarding, userName]);
 
   useEffect(() => {
