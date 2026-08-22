@@ -1,7 +1,8 @@
 # React Native & Expo ProGuard rules
 
-# Audio and Media3 / ExoPlayer (CRITICAL FOR EXPO-AV SOUND PLAYBACK)
+# Audio and Media3 / ExoPlayer (CRITICAL FOR EXPO-AV + EXPO-AUDIO SOUND PLAYBACK)
 -keep class expo.modules.av.** { *; }
+-keep class expo.modules.audio.** { *; }
 -keep class expo.modules.notifications.** { *; }
 -keep class com.google.android.exoplayer2.** { *; }
 -keep class androidx.media3.** { *; }

@@ -11,14 +11,15 @@
       "resizeMode": "contain",
       "backgroundColor": "#FDFCF8"
     },
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.softly.app",
-      "icon": "./assets/icon.png"
+      "icon": "./assets/icon.png",
+      "newArchEnabled": true
     },
     "android": {
       "package": "com.softly.app",
+      "newArchEnabled": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FDFCF8"

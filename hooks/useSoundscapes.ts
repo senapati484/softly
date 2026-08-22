@@ -1,6 +1,5 @@
 import { useRef, useCallback } from 'react';
 import { Audio } from 'expo-av';
-import { Asset } from 'expo-asset';
 import { useSoftlyStore } from '../store/useSoftlyStore';
 
 export interface SoundscapeTrack {
@@ -39,12 +38,12 @@ export const SOUNDSCAPE_TRACKS: SoundscapeTrack[] = [
   },
 ];
 
-// Global audio player instance to persist across tab switches
-let globalSoundInstance: Audio.Sound | null = null;
-let isAudioConfigured = false;
+// Global audio sound instance persisting across tab navigations
+let globalSound: Audio.Sound | null = null;
+let isAudioModeConfigured = false;
 
-async function setupAudioMode() {
-  if (isAudioConfigured) return;
+async function configureAudio() {
+  if (isAudioModeConfigured) return;
   try {
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
@@ -53,26 +52,28 @@ async function setupAudioMode() {
       shouldDuckAndroid: true,
       playThroughEarpieceAndroid: false,
     });
-    isAudioConfigured = true;
+    isAudioModeConfigured = true;
   } catch (e) {
-    console.warn('Could not configure Audio mode:', e);
+    console.warn('[Softly] Audio mode configuration note:', e);
   }
 }
 
 export function useSoundscapes() {
-  const { activeSound, isPlayingSound, soundVolume, setActiveSound, setIsPlayingSound } = useSoftlyStore();
+  const { activeSound, isPlayingSound, soundVolume, setActiveSound, setIsPlayingSound } =
+    useSoftlyStore();
+
   const isPlayingRef = useRef(isPlayingSound);
   isPlayingRef.current = isPlayingSound;
 
   const stopSound = useCallback(async () => {
-    if (globalSoundInstance) {
+    if (globalSound) {
       try {
-        await globalSoundInstance.stopAsync();
-        await globalSoundInstance.unloadAsync();
+        await globalSound.stopAsync();
+        await globalSound.unloadAsync();
       } catch {
-        // ignore unload errors
+        // ignore unload error
       }
-      globalSoundInstance = null;
+      globalSound = null;
     }
     setIsPlayingSound(false);
   }, [setIsPlayingSound]);
@@ -80,68 +81,41 @@ export function useSoundscapes() {
   const playSound = useCallback(
     async (trackName: string) => {
       try {
-        await setupAudioMode();
+        await configureAudio();
 
-        if (globalSoundInstance) {
+        if (globalSound) {
           try {
-            await globalSoundInstance.stopAsync();
-            await globalSoundInstance.unloadAsync();
+            await globalSound.stopAsync();
+            await globalSound.unloadAsync();
           } catch {
             // ignore
           }
-          globalSoundInstance = null;
+          globalSound = null;
         }
 
         const track = SOUNDSCAPE_TRACKS.find((t) => t.name === trackName) || SOUNDSCAPE_TRACKS[0];
+        const volume = soundVolume > 0 ? soundVolume : 0.8;
 
-        // Resolve exact physical device local file URI
-        let playbackSource: any = track.source;
-        try {
-          const asset = Asset.fromModule(track.source);
-          if (!asset.downloaded) {
-            await asset.downloadAsync();
-          }
-          if (asset.localUri) {
-            playbackSource = { uri: asset.localUri };
-          } else if (asset.uri) {
-            playbackSource = { uri: asset.uri };
-          }
-        } catch (e) {
-          console.warn('Asset resolution note:', e);
-        }
-
-        const targetVol = soundVolume > 0 ? soundVolume : 0.8;
         const { sound } = await Audio.Sound.createAsync(
-          playbackSource,
-          { isLooping: true, volume: targetVol, shouldPlay: true }
+          track.source,
+          {
+            shouldPlay: true,
+            isLooping: true,
+            volume,
+          }
         );
 
-        globalSoundInstance = sound;
-        await sound.setVolumeAsync(targetVol);
+        globalSound = sound;
+        await sound.setVolumeAsync(volume);
         await sound.setIsLoopingAsync(true);
         await sound.playAsync();
 
         setActiveSound(trackName);
         setIsPlayingSound(true);
       } catch (err) {
-        console.warn('Primary audio playback error on device, trying fallback:', err);
-        // Fallback attempt: if URI object failed, try raw require module ID
-        try {
-          const track = SOUNDSCAPE_TRACKS.find((t) => t.name === trackName) || SOUNDSCAPE_TRACKS[0];
-          const targetVol = soundVolume > 0 ? soundVolume : 0.8;
-          const { sound } = await Audio.Sound.createAsync(
-            track.source,
-            { isLooping: true, volume: targetVol, shouldPlay: true }
-          );
-          globalSoundInstance = sound;
-          await sound.playAsync();
-          setActiveSound(trackName);
-          setIsPlayingSound(true);
-        } catch (fallbackErr) {
-          console.warn('Fallback audio creation failed:', fallbackErr);
-          setActiveSound(trackName);
-          setIsPlayingSound(false);
-        }
+        console.warn('[Softly] playSound error:', err);
+        setActiveSound(trackName);
+        setIsPlayingSound(false);
       }
     },
     [soundVolume, setActiveSound, setIsPlayingSound]
