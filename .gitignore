@@ -29,3 +29,6 @@ ios/Pods/
 ._*
 .Spotlight-V100
 .Trashes
+
+# Release build artifacts (use SourceForge for distribution)
+exports/softly-v1.0-release.apk
