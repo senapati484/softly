@@ -6,6 +6,10 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*",
+      "assets/sounds/*.mp3"
+    ],
     "splash": {
       "image": "./assets/logo.png",
       "resizeMode": "contain",
@@ -31,7 +35,13 @@
       "favicon": "./assets/icon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-av",
+        {
+          "microphonePermission": false
+        }
+      ]
     ],
     "scheme": "softly"
   }
